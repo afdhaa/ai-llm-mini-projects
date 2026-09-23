@@ -1,0 +1,17 @@
+customer,transactions,active_days,inactive_days,status
+Store A,850,28,1,active
+Store B,120,12,18,churned
+Store C,620,27,2,active
+Store D,45,5,30,churned
+Store E,300,23,7,active
+Store F,180,15,15,churned
+Store G,720,29,1,active
+Store H,90,10,20,churned
+Store I,410,25,5,active
+Store J,150,14,16,churned
+Store K,550,26,4,active
+Store L,80,8,22,churned
+Store M,360,22,8,active
+Store N,200,17,13,churned
+Store O,680,28,2,active
+Store P,110,11,19,churned

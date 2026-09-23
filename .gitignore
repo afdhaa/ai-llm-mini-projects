@@ -1,0 +1,49 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Bytecode & Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ML model artifacts
+models/*.joblib
+*.joblib
+*.pkl
+
+# Logs & temporary files
+*.log
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# IDE / Editor configurations
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db

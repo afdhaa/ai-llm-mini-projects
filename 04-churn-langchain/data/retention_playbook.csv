@@ -1,0 +1,5 @@
+risk_level,sla,pic,incentive,actions
+HIGH,Within 24 hours (Urgent),Senior Account Manager,25% discount voucher + 1 month waived platform fee,Schedule direct 1-on-1 discovery call to identify operational blockers;Provide 25% discount voucher on next invoice;Waive platform subscription fee for 1 full month;Arrange priority technical onboarding session if integration issues exist
+MEDIUM,Within 3 business days,Customer Success Specialist,Subsidized shipping voucher for next 3 orders,Send personalized re-engagement outreach highlighting top-performing product categories;Provide subsidized shipping vouchers across next 3 orders;Invite account owner to merchant optimization briefing
+LOW,Monthly cadence,Automated CRM,Loyalty points booster,Send monthly product updates and platform feature digest;Offer loyalty points booster upon reaching next order milestone;Trigger quarterly NPS feedback survey
+NO RISK,Periodic monitoring,Automated CRM,Champion Partner Status,Assign Champion Partner badge on merchant profile;Send automated milestone appreciation note;Maintain standard service level
