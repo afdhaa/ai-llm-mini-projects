@@ -1,14 +1,14 @@
 # Architecture Overview
 
-This repository demonstrates six progressive architectures solving the same domain problem: **Customer Churn Prediction and Retention Strategy**.
+This repository demonstrates seven progressive architectures solving the same domain problem: **Customer Churn Prediction and Retention Strategy**.
 
 ```text
-01. Pure ML       02. Pure LLM      03. Hybrid        04. Agentic AI    05. Structured    06. Guarded Agent
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐
-│ Scikit-Learn │  │ Foundation   │  │ Scikit-Learn │  │ LangChain    │  │ Pydantic     │  │ Guardrail Input  │
-│ Statistical  │─>│ Zero-Shot    │─>│      +       │─>│ Tool Calling │─>│ Schema       │─>│        +         │
-│ Pipeline     │  │ Prompting    │  │ LLM Briefing │  │ Dynamic Loop │  │ Contract     │  │ Sandboxed Agent  │
-└──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────────┘
+01. Pure ML    02. Pure LLM   03. Hybrid     04. Agentic    05. Structured 06. Guarded    07. Evals Suite
+┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────────────┐
+│ Scikit-   │  │ Found-    │  │ Scikit-   │  │ LangChain │  │ Pydantic  │  │ Guardrail │  │ Deterministic     │
+│ Learn     │─>│ ation     │─>│ Learn +   │─>│ Tool      │─>│ Schema    │─>│ + Sand-   │─>│ Assertions +      │
+│ Model     │  │ Zero-Shot │  │ LLM Brief │  │ Calling   │  │ Contract  │  │ box Agent │  │ LLM-as-a-Judge    │
+└───────────┘  └───────────┘  └───────────┘  └───────────┘  └───────────┘  └───────────┘  └───────────────────┘
 ```
 
 ---
@@ -132,31 +132,6 @@ LLM Agent (LangChain)
         Executive Account Summary & Action Plan
 ```
 
-### Agentic Loop Sequence Diagram
-
-```text
-User            LangChain Runner                LLM Brain (Remote)         Local Tools (Python)
- │                     │                                │                           │
- │── User Query ──────>│                                │                           │
- │                     │── Prompt + Tool Schemas ──────>│                           │
- │                     │<─ Tool Call Intent ────────────│                           │
- │                     │   (e.g., get_target_customers) │                           │
- │                     │                                │                           │
- │                     │── Execute Local Function ─────────────────────────────────>│
- │                     │<─ Return Tool Output (CSV records) ────────────────────────│
- │                     │                                │                           │
- │                     │── Send Observation ───────────>│                           │
- │                     │<─ Tool Call Intent ────────────│                           │
- │                     │   (e.g., predict_churn_risk)   │                           │
- │                     │                                │                           │
- │                     │── Execute ML Inference (.joblib) ─────────────────────────>│
- │                     │<─ Return Churn Probabilities ──────────────────────────────│
- │                     │                                │                           │
- │                     │── Send Observation ───────────>│                           │
- │                     │<─ Final Response (No tools) ───│                           │
- │<── Strategy Report ─│                                │                           │
-```
-
 - **Characteristics**: Multi-turn reasoning; dynamic query resolution; autonomous decision making; integrates disparate databases, models, and policy playbooks.
 - **Audience**: Interactive human analysts posing dynamic questions.
 - **Token Accounting**: Cumulative multi-turn usage summation across all reasoning iterations.
@@ -241,17 +216,54 @@ Validated Type-Safe Output & Clean Operations Briefing
 
 ---
 
+## Tier 7: Automated Evals & LLM-as-a-Judge (`07-churn-evals`)
+
+Comprehensive quality assurance and benchmarking suite measuring pipeline reliability, hallucination rates, and security containment quantitatively.
+
+```text
+Golden Benchmark Dataset (data/eval_dataset.json - 10 Test Cases)
+                         │
+                         ▼
+        System Under Test (SUT Pipeline)
+                         │
+         ┌───────────────┴────────────────────────┐
+         ▼                                        ▼
+Pillar 1: Deterministic Rules            Pillar 2: LLM-as-a-Judge
+(Python Programmatic, 0 Tokens)          (Model-Graded Evaluation)
+• Domain Validity Match                  • Faithfulness (Anti-Hallucination)
+• Guardrail Status Verification          • SOP Policy Compliance
+• Anti-Leakage (Forbidden Tokens)        • Actionability & Operational Clarity
+• Probability Bounds (0.0 <= p <= 1.0)   • Scoring Rubric (1 - 5 Scale)
+• Tier vs. Action SLA Alignment          • Objective Verdict (PASS / FAIL)
+         │                                        │
+         └───────────────────┬────────────────────┘
+                             ▼
+                 Aggregated Benchmark Audit
+            - Pass Rate (% Passed Test Cases)
+            - Deterministic Assertion Rate (%)
+            - Average Faithfulness & SOP Adherence
+            - Total Tokens & Latency Economics
+            - Export to data/eval_report.json
+```
+
+- **Characteristics**: Automated regression testing; ground-truth evaluation; objective quality gates for CI/CD deployment.
+- **Two Evaluation Pillars**:
+  1. **Deterministic Rules**: Zero-token programmatic assertions verifying domain bounds, SLA alignment, and token leakage.
+  2. **Model-Graded Judge**: LLM-as-a-Judge rubric scoring faithfulness (hallucination), policy compliance, and operational actionability.
+- **Audit Export**: Aggregated matrix scorecard exported to `data/eval_report.json`.
+
+---
+
 ## Architecture Comparison Matrix
 
-| Dimension | 01 - Churn ML | 02 - Churn LLM | 03 - Churn ML + LLM | 04 - Churn LangChain | 05 - Structured Output | 06 - Guarded Agent |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Paradigm** | Traditional ML | Foundation LLM | Hybrid (ML + LLM) | Agentic AI | Schema-Enforced AI | **Guarded Enterprise AI** |
-| **Primary Audience** | Data Pipelines | Human Analyst | Operations Team | Human Analyst (Chat) | Backend / API Services | **Public / Enterprise APIs** |
-| **Input Format** | CSV Records | Target Account | Target Account | Open-ended Query | Target Data (Batch/Single) | **Free Query (Injection-Protected)** |
-| **Injection Defense** | N/A (No LLM) | None | None | None | Basic (Schema Constraint) | **Active 3-Layer Guardrail** |
-| **Output Type** | Numeric float | Free-Text | Free-Text | Free-Text | Validated Pydantic / JSON | **Validated Pydantic / JSON** |
-| **Off-Topic Bypass** | N/A | Vulnerable | Vulnerable | Vulnerable | Immune (Schema Bound) | **Fully Blocked & Sanitized** |
-| **Control Flow** | Static Sequential | Static Sequential | Static Sequential | Dynamic Loop | Static Sequential | **Guarded Dynamic Loop** |
-| **Tool Execution** | None | None | None | Dynamic (4 Tools) | None (Schema Binding) | **Sandboxed (4 Tools)** |
-| **Runtime Stack** | Scikit-Learn | LLM SDK | Scikit-Learn + SDK | Scikit-Learn + LangChain | Scikit-Learn + Pydantic | Scikit-Learn + LangChain + Pydantic |
-| **Token Usage** | None | Single (~300) | Single (~270) | Cumulative (~4.8k) | Single (~900 - 1.7k) | Cumulative (~4k - 5k) |
+| Dimension | 01 - Churn ML | 02 - Churn LLM | 03 - Churn ML + LLM | 04 - Churn LangChain | 05 - Structured Output | 06 - Guarded Agent | 07 - Automated Evals |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Paradigm** | Traditional ML | Foundation LLM | Hybrid (ML + LLM) | Agentic AI | Schema-Enforced AI | Guarded Enterprise AI | **AI Quality Assurance** |
+| **Primary Audience** | Data Pipelines | Human Analyst | Operations Team | Human Analyst (Chat) | Backend / API Services | Public / Enterprise APIs | **Engineering Teams / CI/CD** |
+| **Input Format** | CSV Records | Target Account | Target Account | Open-ended Query | Target Data (Batch/Single) | Free Query (Protected) | **Golden Test Dataset** |
+| **Injection Defense** | N/A | None | None | None | Basic (Schema Bound) | Active 3-Layer Guardrail | **Automated Injection Test** |
+| **Output Type** | Numeric float | Free-Text | Free-Text | Free-Text | Validated Pydantic / JSON | Validated Pydantic / JSON | **Audit Matrix & Report JSON** |
+| **Evaluation Method** | ROC-AUC / Accuracy | None | None | None | Pydantic Validation | Pydantic Validation | **Rules + LLM-as-a-Judge** |
+| **Control Flow** | Static Sequential | Static Sequential | Static Sequential | Dynamic Loop | Static Sequential | Guarded Dynamic Loop | **Automated Test Harness** |
+| **Tool Execution** | None | None | None | Dynamic (4 Tools) | None (Schema Binding) | Sandboxed (4 Tools) | **Sandboxed Pipeline (SUT)** |
+| **Token Usage** | None | Single (~300) | Single (~270) | Cumulative (~4.8k) | Single (~900 - 1.7k) | Cumulative (~4k - 5k) | **Benchmarked per Test Case** |
