@@ -18,20 +18,24 @@ This repository demonstrates five progressive architectures solving the same dom
 Standard tabular machine learning pipeline using Scikit-Learn without LLM dependencies.
 
 ```text
-Customer Activity Data (CSV)
+Training Dataset (data/customers.csv)
             │
             ▼
 Feature Preprocessing (StandardScaler)
             │
             ▼
-Logistic Regression Pipeline
-            │
-            ▼
-Churn Probability & Percentage Output
+Logistic Regression Training ──> Artifact (models/churn_model.joblib)
+                                        │
+Target Accounts (data/target_customers.csv)
+            │                           │
+            └───────────┬───────────────┘
+                        ▼
+           Calibrated Churn Probabilities (%)
 ```
 
-- **Characteristics**: Fast, deterministic, statistically calibrated probabilities.
-- **Limitation**: Produces numeric scores only; lacks conversational explanation or dynamic reasoning.
+- **Characteristics**: Deterministic, statistically calibrated probabilities with sub-millisecond local execution.
+- **Limitation**: Produces numeric scores only; lacks qualitative explanation or context-aware reasoning.
+- **Input Data**: `data/customers.csv` (Training with `status`), `data/target_customers.csv` (Inference without `status`).
 - **Artifact**: `models/churn_model.joblib`.
 
 ---
@@ -41,7 +45,7 @@ Churn Probability & Percentage Output
 Direct zero-shot prompting of foundation models over raw tabular activity metrics, bypassing traditional ML model training.
 
 ```text
-Customer Activity Data (CSV)
+Target Accounts (data/target_customers.csv)
             │
             ▼
 Raw Feature Extraction (transactions, active days, inactive days)
@@ -58,6 +62,7 @@ Qualitative Risk Tier & Narrative Assessment
 
 - **Characteristics**: Zero training required; immediate deployment; rich qualitative behavioral explanations.
 - **Limitation**: Subjective probability estimations; uncalibrated risk assessments on raw numerical data.
+- **Input Data**: `data/target_customers.csv`.
 - **Token Accounting**: Single-turn prompt and completion tracking via provider metadata.
 
 ---
@@ -67,13 +72,13 @@ Qualitative Risk Tier & Narrative Assessment
 Combines statistical accuracy from Scikit-Learn with qualitative reasoning from an LLM.
 
 ```text
-Customer Activity Data (CSV)
+Target Accounts (data/target_customers.csv)
             │
             ▼
-Scikit-Learn Churn Pipeline
+Scikit-Learn Inference (models/churn_model.joblib)
             │
             ▼
-    Churn Probability
+   Calibrated Churn Probability
             │
       ┌─────┴────────────────┐
       ▼                      ▼
@@ -92,14 +97,15 @@ Activity Metrics       Risk Score (%)
 ```
 
 - **Characteristics**: Best of both worlds. The statistical model delivers calibrated probability percentages while the LLM interprets the drivers and formulates an actionable intervention plan.
-- **Limitation**: Free-text output is difficult to reliably parse for downstream databases and API pipelines.
+- **Limitation**: Free-text output is difficult to reliably parse for downstream databases and automated API pipelines.
+- **Input Data**: `data/target_customers.csv` (Evaluated account), `data/customers.csv` (Model training).
 - **Token Accounting**: Single-turn prompt and completion tracking via provider metadata.
 
 ---
 
 ## Tier 4: Autonomous Agent with Tool Calling (`04-churn-langchain`)
 
-The LLM acts as an autonomous agent using LangChain tool calling. Given a query, the agent dynamically determines which tools to invoke, executes them against local data and ML models, and synthesizes the findings into an actionable retention plan.
+Designed for **Human-to-AI Interaction**. The LLM acts as an autonomous agent using LangChain tool calling to explore, reason, and answer open-ended operational queries.
 
 ```text
 User Query / Task
@@ -152,16 +158,17 @@ User            LangChain Runner                LLM Brain (Remote)         Local
 ```
 
 - **Characteristics**: Multi-turn reasoning; dynamic query resolution; autonomous decision making; integrates disparate databases, models, and policy playbooks.
+- **Audience**: Interactive human analysts posing dynamic questions.
 - **Token Accounting**: Cumulative multi-turn usage summation across all reasoning iterations.
 
 ---
 
 ## Tier 5: Production Structured Outputs (`05-churn-structured-outputs`)
 
-Replaces free-text output with a strictly validated, type-safe Pydantic model (`ChurnAssessment`) via LangChain's `with_structured_output`.
+Designed for **Machine-to-Machine (M2M) Pipelines**. Replaces free-text narrative with a strictly validated, type-safe Pydantic model (`ChurnAssessment`) via LangChain's `with_structured_output`.
 
 ```text
-Customer Record (data/customers.csv)
+Target Accounts (data/target_customers.csv)
                 │
                 ▼
       Scikit-Learn Pipeline
@@ -172,7 +179,7 @@ Customer Record (data/customers.csv)
                 │
                 ▼
 LLM with Pydantic Schema Enforcement
-  (llm.with_structured_output(ChurnAssessment))
+  (llm.with_structured_output(ChurnAssessment / BatchChurnAssessment))
                 │
                 ▼
    Validated Pydantic Instance
@@ -183,7 +190,10 @@ Type-Safe Python Object    Deterministic JSON
 ```
 
 - **Characteristics**: Production contract guarantees. Eliminates regex parsing; guarantees numerical ranges (`ge=0.0, le=1.0`), strict categorical enums (`Literal`), and nested arrays of validated objects (`ActionItem`).
-- **Downstream Readiness**: Direct serialization to Postgres JSONB, REST API response bodies, or message queues.
+- **Audience**: Backend workers, cron jobs, webhooks, and REST API services requiring deterministic schemas.
+- **Execution Modes**:
+  - **Batch Mode (Default)**: Evaluates all accounts in `data/target_customers.csv` simultaneously in a single API call via `BatchChurnAssessment`.
+  - **Single-Account Mode**: Evaluates an individual merchant on demand via `ChurnAssessment`.
 - **Token Accounting**: Single-turn prompt and completion tracking via provider metadata.
 
 ---
@@ -193,11 +203,13 @@ Type-Safe Python Object    Deterministic JSON
 | Dimension | 01 - Churn ML | 02 - Churn LLM | 03 - Churn ML + LLM | 04 - Churn LangChain | 05 - Structured Output |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Paradigm** | Traditional ML | Foundation LLM | Hybrid (ML + LLM) | Agentic AI | Schema-Enforced AI |
+| **Primary Audience** | Data Pipelines | Human Analyst | Operations Team | Human Analyst (Chat/CLI) | **Backend / API Services** |
 | **Model Training** | Required (Scikit-Learn) | None | Required (Scikit-Learn) | Required (Scikit-Learn) | Required (Scikit-Learn) |
 | **Probability Source** | Calibrated (Statistical) | Heuristic Estimate | Calibrated (Statistical) | Calibrated (via ML Tool) | Calibrated (Statistical) |
+| **Input Format** | CSV Records | Target Account | Target Account | Open-ended Query | **Target Data (Single/Batch)** |
 | **Output Type** | Numeric float (`.joblib`) | Free-Text Narrative | Free-Text Narrative | Free-Text Narrative | **Validated Pydantic / JSON** |
 | **API Contract** | None | None (Unstructured) | None (Unstructured) | None (Unstructured) | **Guaranteed Schema** |
 | **Control Flow** | Static Sequential | Static Sequential | Static Sequential | Dynamic Autonomous Loop | Static Sequential |
 | **Tool Execution** | None | None | None | Dynamic (4 Tools) | None (Schema Binding) |
 | **Runtime Stack** | Scikit-Learn | LLM SDK | Scikit-Learn + LLM SDK | Scikit-Learn + LangChain | Scikit-Learn + LangChain + Pydantic |
-| **Token Usage** | None (Local Compute) | Single-Turn (~300) | Single-Turn (~270) | Cumulative (~4.8k) | Single-Turn (~900) |
+| **Token Usage** | None (Local Compute) | Single-Turn (~300) | Single-Turn (~270) | Cumulative (~4.8k) | Single-Turn (~900 - 1.7k) |
