@@ -3,12 +3,19 @@
 This repository demonstrates eight progressive architectures solving the same domain problem: **Customer Churn Prediction and Retention Strategy**.
 
 ```text
-01. Pure ML    02. Pure LLM   03. Hybrid     04. Agentic    05. Structured 06. Guarded    07. Evals Suite     08. Context RAG
-┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────────────┐  ┌───────────────────┐
-│ Scikit-   │  │ Found-    │  │ Scikit-   │  │ LangChain │  │ Pydantic  │  │ Guardrail │  │ Deterministic     │  │ Tabular ML +      │
-│ Learn     │─>│ ation     │─>│ Learn +   │─>│ Tool      │─>│ Schema    │─>│ + Sand-   │─>│ Assertions +      │─>│ Unstructured RAG  │
-│ Model     │  │ Zero-Shot │  │ LLM Brief │  │ Calling   │  │ Contract  │  │ box Agent │  │ LLM-as-a-Judge    │  │ Ticket Synthesis  │
-└───────────┘  └───────────┘  └───────────┘  └───────────┘  └───────────┘  └───────────┘  └───────────────────┘  └───────────────────┘
+Phase 1: Foundations to Autonomous Exploration (Tiers 01 - 04)
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│ 01. Pure ML │     │02. Pure LLM │     │ 03. Hybrid  │     │  04. Agent  │
+│ Scikit-Learn│───> │ Foundation  │───> │ ML + LLM    │───> │  LangChain  │
+│ Model (.pkl)│     │  Zero-Shot  │     │  Narrative  │     │Dynamic Tools│
+└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
+                                                                   │
+Phase 2: Production Hardening, Quality & RAG (Tiers 05 - 08)       ▼
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│ 05. Schema  │     │ 06. Guarded │     │  07. Evals  │     │ 08. Cont.RAG│
+│  Pydantic   │───> │ 3-Layer Sec │───> │  LLM-as-a-  │───> │ Hybrid ML + │
+│ Structured  │     │  Sandboxing │     │  Judge SUT  │     │ Support RAG │
+└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
 ```
 
 ---
@@ -288,19 +295,18 @@ Target Account: "Store Critical"
 - **Characteristics**: Eliminates tabular blind spots; resolves root cause misattributions; ensures retention actions directly address customer grievances rather than applying tone-deaf discounts.
 - **Input Data**: `data/customers.csv`, `data/target_customers.csv`, `data/retention_playbook.csv`, and `data/support_tickets.json`.
 - **Artifacts**: Calibrated ML model (`models/churn_model.joblib`), Vector Retriever index, validated JSON reports.
-
 ---
 
 ## Architecture Comparison Matrix
 
 | Dimension | 01 - Churn ML | 02 - Churn LLM | 03 - Churn ML + LLM | 04 - Churn LangChain | 05 - Structured Output | 06 - Guarded Agent | 07 - Automated Evals | 08 - Contextual RAG |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Paradigm** | Traditional ML | Foundation LLM | Hybrid (ML + LLM) | Agentic AI | Schema-Enforced AI | Guarded Enterprise AI | **AI Quality Assurance** | **Context-Aware Hybrid AI** |
-| **Primary Audience** | Data Pipelines | Human Analyst | Operations Team | Human Analyst (Chat) | Backend / API Services | Public / Enterprise APIs | **Engineering Teams / CI/CD** | **Operations / Account Execs** |
-| **Input Format** | CSV Records | Target Account | Target Account | Open-ended Query | Target Data (Batch/Single) | Free Query (Protected) | **Golden Test Dataset** | **Tabular Data + Unstructured Tickets** |
-| **Injection Defense** | N/A | None | None | None | Basic (Schema Bound) | Active 3-Layer Guardrail | **Automated Injection Test** | **Schema Contract Bound** |
-| **Output Type** | Numeric float | Free-Text | Free-Text | Free-Text | Validated Pydantic / JSON | Validated Pydantic / JSON | **Audit Matrix & Report JSON** | **Validated Pydantic Report** |
-| **Evaluation Method** | ROC-AUC / Accuracy | None | None | None | Pydantic Validation | Pydantic Validation | **Rules + LLM-as-a-Judge** | **Schema Validation + Root Cause Audit** |
-| **Control Flow** | Static Sequential | Static Sequential | Static Sequential | Dynamic Loop | Static Sequential | Guarded Dynamic Loop | **Automated Test Harness** | **Hybrid Multi-Modal Sequential** |
-| **Tool Execution** | None | None | None | Dynamic (4 Tools) | None (Schema Binding) | Sandboxed (4 Tools) | **Sandboxed Pipeline (SUT)** | **Semantic Retriever + ML Pipeline** |
-| **Token Usage** | None | Single (~300) | Single (~270) | Cumulative (~4.8k) | Single (~900 - 1.7k) | Cumulative (~4k - 5k) | **Benchmarked per Test Case** | **Single (~800 - 1.5k)** |
+| **Paradigm** | Traditional ML | Foundation LLM | Hybrid (ML + LLM) | Agentic AI | Schema-Enforced AI | Guarded Enterprise AI | AI Quality Assurance | Context-Aware Hybrid AI |
+| **Primary Audience** | Data Pipelines | Human Analyst | Operations Team | Human Analyst (Chat) | Backend / API Services | Public / Enterprise APIs | Engineering Teams / CI/CD | Operations / Account Execs |
+| **Input Format** | CSV Records | Target Account | Target Account | Open-ended Query | Target Data (Batch/Single) | Free Query (Protected) | Golden Test Dataset | Tabular Data + Tickets |
+| **Injection Defense** | N/A | None | None | None | Basic (Schema Bound) | Active 3-Layer Guardrail | Automated Injection Test | Schema Contract Bound |
+| **Output Type** | Numeric float | Free-Text | Free-Text | Free-Text | Validated Pydantic / JSON | Validated Pydantic / JSON | Audit Matrix & Report JSON | Validated Pydantic Report |
+| **Evaluation Method** | ROC-AUC / Accuracy | None | None | None | Pydantic Validation | Pydantic Validation | Rules + LLM-as-a-Judge | Schema Validation + Root Cause |
+| **Control Flow** | Static Sequential | Static Sequential | Static Sequential | Dynamic Loop | Static Sequential | Guarded Dynamic Loop | Automated Test Harness | Hybrid Multi-Modal Sequential |
+| **Tool Execution** | None | None | None | Dynamic (4 Tools) | None (Schema Binding) | Sandboxed (4 Tools) | Sandboxed Pipeline (SUT) | Semantic Retriever + ML |
+| **Token Usage** | None | Single (~300) | Single (~270) | Cumulative (~4.8k) | Single (~900 - 1.7k) | Cumulative (~4k - 5k) | Benchmarked per Test Case | Single (~800 - 1.5k) |

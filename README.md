@@ -14,8 +14,8 @@ Most tutorials teach **Machine Learning** (Scikit-Learn, tabular data, statistic
 4. **How do we apply production-applicable patterns (schema validation, defensive guardrails, automated evals) to an experimental LLM prototype?**
 
 This repository answers those questions by exploring **the exact same business problem across 8 progressive architectural tiers**—taking you step-by-step from a simple Logistic Regression model to an autonomous agent with defensive guardrails, automated evals, and contextual RAG.
----
 
+---
 ## 💡 The Real-World Use Case: Customer Churn & Retention
 
 **Customer Churn** (identifying customers or merchant accounts at risk of leaving) is one of the most critical challenges in SaaS, FinTech, and e-commerce. It is also the ideal learning vehicle because it inherently requires **two distinct capabilities**:
@@ -39,6 +39,8 @@ By combining both, you see exactly how modern AI systems are built in industry.
 | **06** | **Guarded Agent** | Security Guardrails + Sandboxing | Defend against adversarial prompt injections, jailbreaks, and off-topic queries before they reach the agent. |
 | **07** | **Automated Evals** | LLM-as-a-Judge + Benchmarking | Test non-deterministic AI pipelines using a golden dataset, deterministic assertion rules, and automated model-graded rubrics. |
 | **08** | **Contextual RAG** | Vector Similarity + Hybrid Synthesis | Reconcile quantitative ML churn scores against qualitative customer support tickets to uncover true root causes and prevent tone-deaf retention offers. |
+
+---
 
 ## 🏗️ Architectural Evolution
 
@@ -77,7 +79,7 @@ By combining both, you see exactly how modern AI systems are built in industry.
 | **High-throughput bulk scoring** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | — | — |
 | **Human-readable explanation** | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | — | ✅ |
 | **Strict statistical calibration** | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | — | ✅ |
-| **Autonomous multi-step actions** | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — | — |
+| **Autonomous multi-step actions** | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | — | — |
 | **Direct API / Database integration** | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | — | ✅ |
 | **Public / Untrusted user inputs** | — | ❌ | ❌ | ❌ | ❌ | ✅ | — | — |
 | **CI/CD Regression & Quality Gates** | — | — | — | — | — | — | ✅ | — |
@@ -151,6 +153,8 @@ cp .env.example .env  # configure your provider & API key
 python src/train.py
 python src/main.py --id "Store Critical"
 ```
+
+---
 
 ## Supported LLM Providers
 
