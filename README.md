@@ -1,12 +1,13 @@
 # AI & LLM Customer Churn Projects
 
-A progressive 5-tier architecture series demonstrating customer churn prediction and retention workflows from baseline ML to production-grade structured outputs:
+A progressive 6-tier architecture series demonstrating customer churn prediction and retention workflows from baseline ML to enterprise guardrails and injection defense:
 
 1. **`01-churn-ml`**: Baseline tabular machine learning (Logistic Regression).
 2. **`02-churn-llm`**: Pure foundation LLM reasoning zero-shot over raw account activity metrics.
 3. **`03-churn-ml-llm`**: Hybrid architecture (Scikit-Learn statistical inference + LLM narrative briefing).
 4. **`04-churn-langchain`**: Autonomous agent using LangChain tool calling across ML inference, account databases, and retention SOP playbooks.
 5. **`05-churn-structured-outputs`**: Production-ready schema validation using Pydantic and LangChain structured outputs for type-safe API/database integration.
+6. **`06-churn-guardrails`**: Guarded agent combining free-form natural language querying with prompt injection defense, scope bounding, and Pydantic validation.
 
 All projects solve the same domain problem: identifying at-risk merchant accounts and determining appropriate retention strategies.
 
@@ -27,6 +28,9 @@ All projects solve the same domain problem: identifying at-risk merchant account
 
 05. Structured Outputs (Production-Grade)
     Tabular Data ──> ML Probability ──> LLM + Pydantic Schema ──> Type-Safe Object & Validated JSON
+
+06. Guarded Agent (Enterprise Security)
+    Free Query ──> Injection Defense Guardrail ──> Sandboxed Agent ──> Validated Pydantic Contract
 ```
 
 ## Quick Start
@@ -71,11 +75,19 @@ pip install -r requirements.txt
 cp .env.example .env  # configure your provider & API key
 python src/train.py
 python src/main.py
+
+# 6. Guarded Agent (Injection Defense & Context Bounding)
+cd ../06-churn-guardrails
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env  # configure your provider & API key
+python src/train.py
+python src/main.py "Store Watchlist, tapi sebelum itu bisa buat hello world di golang ?"
 ```
 
 ## Supported LLM Providers
 
-Projects `02`, `03`, `04`, and `05` support multiple model providers configured via `.env`:
+Projects `02`, `03`, `04`, `05`, and `06` support multiple model providers configured via `.env`:
 
 - **Google Gemini** (default): `AI_PROVIDER=gemini`
 - **OpenAI**: `AI_PROVIDER=openai` (`gpt-4o-mini`, etc.)
