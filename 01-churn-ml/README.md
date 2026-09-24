@@ -5,7 +5,7 @@ Baseline tabular machine learning pipeline for customer churn prediction using S
 ## Dataset Structure
 
 - **Training Data (`data/customers.csv`)**: Historical records with `status` label (`active` / `churned`).
-- **Test / Inference Data (`data/predict_customer.csv`)**: New customer records without target labels.
+- **Target / Inference Data (`data/target_customers.csv`)**: Merchant records to evaluate without target labels.
 
 ## Pipeline Architecture
 
@@ -19,7 +19,7 @@ data/customers.csv (Training Data)
 models/churn_model.joblib
         │
         ▼
-   src/predict.py  <──  data/predict_customer.csv (Inference Data)
+   src/predict.py  <──  data/target_customers.csv (Inference Data)
         │
         ▼
 Prediction Output Table & Linear Equation Summary
@@ -36,7 +36,7 @@ pip install -r requirements.txt
 # 2. Train model
 python src/train.py
 
-# 3. Run prediction (default: data/predict_customer.csv)
+# 3. Run prediction (default: data/target_customers.csv)
 python src/main.py
 # or:
 python src/predict.py

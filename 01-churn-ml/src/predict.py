@@ -7,7 +7,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 FEATURE_COLS = ["transactions", "active_days", "inactive_days"]
 MODEL_PATH = ROOT / "models" / "churn_model.joblib"
-DEFAULT_CSV = ROOT / "data" / "predict_customer.csv"
+DEFAULT_CSV = ROOT / "data" / "target_customers.csv"
 
 
 def print_formula_summary(model) -> None:
@@ -26,7 +26,7 @@ def print_formula_summary(model) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Predict customer churn probability using Logistic Regression.")
-    parser.add_argument("csv_path", nargs="?", default=None, help="Path to input CSV (default: data/predict_customer.csv)")
+    parser.add_argument("csv_path", nargs="?", default=None, help="Path to input CSV (default: data/target_customers.csv)")
     parser.add_argument("-o", "--output", default=None, help="Path to save prediction output CSV")
     args = parser.parse_args()
 

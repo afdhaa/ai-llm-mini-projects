@@ -7,7 +7,7 @@ The Scikit-Learn pipeline computes numeric churn probability. The result and acc
 ## Pipeline Architecture
 
 ```text
-Customer Record (data/customers.csv)
+Target Record (data/target_customers.csv)
                 │
                 ▼
       Scikit-Learn Model
@@ -47,11 +47,11 @@ cp .env.example .env
 # 3. Train model
 python src/train.py
 
-# 4. Run risk briefing (default: Store B)
+# 4. Run risk briefing (default: Store Critical)
 python src/main.py
 
-# Or evaluate a specific merchant from data/customers.csv:
-python src/main.py "Store D"
+# Or evaluate a specific merchant from data/target_customers.csv:
+python src/main.py "Store Watchlist"
 ```
 
 ## Supported Providers

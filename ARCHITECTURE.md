@@ -1,14 +1,14 @@
 # Architecture Overview
 
-This repository demonstrates four progressive architectures solving the same domain problem: **Customer Churn Prediction and Retention Strategy**.
+This repository demonstrates five progressive architectures solving the same domain problem: **Customer Churn Prediction and Retention Strategy**.
 
 ```text
-01. Pure ML           02. Pure LLM          03. Hybrid (ML + LLM)     04. Agentic AI
-┌──────────────┐      ┌──────────────┐      ┌────────────────────┐    ┌────────────────────┐
-│ Scikit-Learn │      │ Foundation   │      │ Scikit-Learn (ML)  │    │ LangChain Agent    │
-│ Statistical  │ ───> │ Zero-Shot    │ ───> │        +           │ ──>│ Tool Calling       │
-│ Pipeline     │      │ Prompting    │      │ LLM Briefing       │    │ Dynamic Loop       │
-└──────────────┘      └──────────────┘      └────────────────────┘    └────────────────────┘
+01. Pure ML           02. Pure LLM          03. Hybrid (ML + LLM)     04. Agentic AI        05. Structured Output
+┌──────────────┐      ┌──────────────┐      ┌────────────────────┐    ┌────────────────────┐ ┌────────────────────┐
+│ Scikit-Learn │      │ Foundation   │      │ Scikit-Learn (ML)  │    │ LangChain Agent    │ │ Pydantic Schema    │
+│ Statistical  │ ───> │ Zero-Shot    │ ───> │        +           │ ──>│ Tool Calling       │─>│ Strict Contract    │
+│ Pipeline     │      │ Prompting    │      │ LLM Briefing       │    │ Dynamic Loop       │ │ Type-Safe JSON     │
+└──────────────┘      └──────────────┘      └────────────────────┘    └────────────────────┘ └────────────────────┘
 ```
 
 ---
@@ -88,10 +88,11 @@ Activity Metrics       Risk Score (%)
       (Gemini / OpenAI / Claude / Custom)
                   │
                   ▼
-      CS Account Risk Briefing
+      CS Account Risk Briefing (Free-Text)
 ```
 
 - **Characteristics**: Best of both worlds. The statistical model delivers calibrated probability percentages while the LLM interprets the drivers and formulates an actionable intervention plan.
+- **Limitation**: Free-text output is difficult to reliably parse for downstream databases and API pipelines.
 - **Token Accounting**: Single-turn prompt and completion tracking via provider metadata.
 
 ---
@@ -155,15 +156,48 @@ User            LangChain Runner                LLM Brain (Remote)         Local
 
 ---
 
+## Tier 5: Production Structured Outputs (`05-churn-structured-outputs`)
+
+Replaces free-text output with a strictly validated, type-safe Pydantic model (`ChurnAssessment`) via LangChain's `with_structured_output`.
+
+```text
+Customer Record (data/customers.csv)
+                │
+                ▼
+      Scikit-Learn Pipeline
+  (Calibrated Churn Probability: 0.0 - 1.0)
+                │
+                ▼
+     Structured Prompt Context
+                │
+                ▼
+LLM with Pydantic Schema Enforcement
+  (llm.with_structured_output(ChurnAssessment))
+                │
+                ▼
+   Validated Pydantic Instance
+         ┌──────┴────────────────┐
+         ▼                       ▼
+Type-Safe Python Object    Deterministic JSON
+(Direct DB / API input)    (Export to file/network)
+```
+
+- **Characteristics**: Production contract guarantees. Eliminates regex parsing; guarantees numerical ranges (`ge=0.0, le=1.0`), strict categorical enums (`Literal`), and nested arrays of validated objects (`ActionItem`).
+- **Downstream Readiness**: Direct serialization to Postgres JSONB, REST API response bodies, or message queues.
+- **Token Accounting**: Single-turn prompt and completion tracking via provider metadata.
+
+---
+
 ## Architecture Comparison Matrix
 
-| Dimension | 01 - Churn ML | 02 - Churn LLM | 03 - Churn ML + LLM | 04 - Churn LangChain |
-| :--- | :--- | :--- | :--- | :--- |
-| **Paradigm** | Traditional ML | Foundation LLM | Hybrid (ML + LLM) | Agentic AI |
-| **Model Training** | Required (Scikit-Learn) | None | Required (Scikit-Learn) | Required (Scikit-Learn) |
-| **Probability Calibration** | Calibrated (Statistical) | Uncalibrated (Heuristic) | Calibrated (Statistical) | Calibrated (via ML Tool) |
-| **Control Flow** | Static / Sequential | Static / Sequential | Static / Sequential | Dynamic / Autonomous Loop |
-| **Tool Execution** | None | None | None | Dynamic (4 Tools) |
-| **Runtime Stack** | Scikit-Learn | LLM SDK | Scikit-Learn + LLM SDK | Scikit-Learn + LangChain + LLM |
-| **Token Usage** | None (Local Compute) | Single-Turn (~300 tokens) | Single-Turn (~270 tokens) | Cumulative Multi-Turn (~4.8k tokens) |
-| **Primary Output** | Numeric score (%) | Qualitative diagnosis | Score + Narrative brief | Multi-account audit + SOP |
+| Dimension | 01 - Churn ML | 02 - Churn LLM | 03 - Churn ML + LLM | 04 - Churn LangChain | 05 - Structured Output |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Paradigm** | Traditional ML | Foundation LLM | Hybrid (ML + LLM) | Agentic AI | Schema-Enforced AI |
+| **Model Training** | Required (Scikit-Learn) | None | Required (Scikit-Learn) | Required (Scikit-Learn) | Required (Scikit-Learn) |
+| **Probability Source** | Calibrated (Statistical) | Heuristic Estimate | Calibrated (Statistical) | Calibrated (via ML Tool) | Calibrated (Statistical) |
+| **Output Type** | Numeric float (`.joblib`) | Free-Text Narrative | Free-Text Narrative | Free-Text Narrative | **Validated Pydantic / JSON** |
+| **API Contract** | None | None (Unstructured) | None (Unstructured) | None (Unstructured) | **Guaranteed Schema** |
+| **Control Flow** | Static Sequential | Static Sequential | Static Sequential | Dynamic Autonomous Loop | Static Sequential |
+| **Tool Execution** | None | None | None | Dynamic (4 Tools) | None (Schema Binding) |
+| **Runtime Stack** | Scikit-Learn | LLM SDK | Scikit-Learn + LLM SDK | Scikit-Learn + LangChain | Scikit-Learn + LangChain + Pydantic |
+| **Token Usage** | None (Local Compute) | Single-Turn (~300) | Single-Turn (~270) | Cumulative (~4.8k) | Single-Turn (~900) |

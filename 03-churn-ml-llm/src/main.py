@@ -21,9 +21,13 @@ if not MODEL_PATH.exists():
 
 model = joblib.load(MODEL_PATH)
 
-# Load customer record from dataset (CLI argument or default: Store B)
-df = pd.read_csv(ROOT / "data" / "customers.csv")
-target_name = sys.argv[1] if len(sys.argv) > 1 else "Store B"
+# Load customer record from target dataset (CLI argument or default: Store Critical)
+target_csv = ROOT / "data" / "target_customers.csv"
+if not target_csv.exists():
+    print(f"[ERROR] Target customer data not found at '{target_csv}'.", file=sys.stderr)
+    sys.exit(1)
+df = pd.read_csv(target_csv)
+target_name = sys.argv[1] if len(sys.argv) > 1 else "Store Critical"
 matched = df[df["customer"].str.lower() == target_name.lower()]
 customer = (matched if not matched.empty else df).iloc[0].to_dict()
 

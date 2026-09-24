@@ -13,13 +13,13 @@ from llm import generate_explanation
 ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT / ".env")
 
-CUSTOMERS_CSV = ROOT / "data" / "customers.csv"
-if not CUSTOMERS_CSV.exists():
-    print(f"[ERROR] Customer data not found at '{CUSTOMERS_CSV}'.", file=sys.stderr)
+TARGET_CSV = ROOT / "data" / "target_customers.csv"
+if not TARGET_CSV.exists():
+    print(f"[ERROR] Target customer data not found at '{TARGET_CSV}'.", file=sys.stderr)
     sys.exit(1)
 
-df = pd.read_csv(CUSTOMERS_CSV)
-target_name = sys.argv[1] if len(sys.argv) > 1 else "Store B"
+df = pd.read_csv(TARGET_CSV)
+target_name = sys.argv[1] if len(sys.argv) > 1 else "Store Critical"
 matched = df[df["customer"].str.lower() == target_name.lower()]
 customer = (matched if not matched.empty else df).iloc[0].to_dict()
 

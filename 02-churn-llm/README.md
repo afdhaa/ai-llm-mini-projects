@@ -11,7 +11,7 @@ This tier demonstrates how a foundation LLM handles tabular data zero-shot:
 ## Pipeline Architecture
 
 ```text
-Customer Record (data/customers.csv)
+Target Record (data/target_customers.csv)
                 │
                 ▼
       Structured Context
@@ -40,11 +40,11 @@ pip install -r requirements.txt
 cp .env.example .env
 # Configure your active provider (default: Gemini)
 
-# 3. Run zero-shot evaluation (default: Store B)
+# 3. Run zero-shot evaluation (default: Store Critical)
 python src/main.py
 
-# Or evaluate a specific merchant from data/customers.csv:
-python src/main.py "Store D"
+# Or evaluate a specific merchant from data/target_customers.csv:
+python src/main.py "Store Watchlist"
 ```
 
 ## Supported Providers
