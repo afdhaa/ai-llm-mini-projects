@@ -1,25 +1,53 @@
-# AI & LLM Customer Churn Projects
+# From Machine Learning to Modern AI: A Hands-on Churn Case Study
 
-A progressive 7-tier architecture series demonstrating customer churn prediction and retention workflows from baseline ML to enterprise guardrails and automated LLM-as-a-Judge benchmarking:
+> **A progressive learning roadmap designed to bridge the gap between classical Machine Learning and modern Generative AI engineering through a real-world business use case.**
 
-1. **`01-churn-ml`**: Baseline tabular machine learning (Logistic Regression).
-2. **`02-churn-llm`**: Pure foundation LLM reasoning zero-shot over raw account activity metrics.
-3. **`03-churn-ml-llm`**: Hybrid architecture (Scikit-Learn statistical inference + LLM narrative briefing).
-4. **`04-churn-langchain`**: Autonomous agent using LangChain tool calling across ML inference, account databases, and retention SOP playbooks.
-5. **`05-churn-structured-outputs`**: Production-ready schema validation using Pydantic and LangChain structured outputs for type-safe API/database integration.
-6. **`06-churn-guardrails`**: Guarded agent combining free-form natural language querying with prompt injection defense, scope bounding, and Pydantic validation.
-7. **`07-churn-evals`**: Automated benchmarking and LLM-as-a-Judge framework combining programmatic deterministic assertions with model-graded evaluation.
+---
 
-All projects solve the same domain problem: identifying at-risk merchant accounts and determining appropriate retention strategies.
+## 🎯 Why This Repository Exists
 
-## Architectural Evolution
+Most tutorials teach **Machine Learning** (Scikit-Learn, tabular data, statistical metrics) and **Generative AI** (LLMs, LangChain, autonomous agents) in complete isolation. Beginners and engineers often struggle to answer:
+
+1. **Where does classical Machine Learning stop, and where does Generative AI actually add value?**
+2. **Can an LLM replace an ML model for tabular predictions? Should it?**
+3. **How do we evolve a bare probability score into an autonomous, action-taking system?**
+4. **How do we apply production-applicable patterns (schema validation, defensive guardrails, automated evals) to an experimental LLM prototype?**
+
+This repository answers those questions by exploring **the exact same business problem across 7 progressive architectural tiers**—taking you step-by-step from a simple Logistic Regression model to an autonomous agent with defensive guardrails and automated LLM-as-a-Judge evaluations.
+---
+
+## 💡 The Real-World Use Case: Customer Churn & Retention
+
+**Customer Churn** (identifying customers or merchant accounts at risk of leaving) is one of the most critical challenges in SaaS, FinTech, and e-commerce. It is also the ideal learning vehicle because it inherently requires **two distinct capabilities**:
+
+- **Quantitative Prediction (ML's Strength):** Analyzing numerical behavior (transaction counts, days inactive, revenue drop) to compute calibrated risk probabilities. Classical ML does this deterministically, cheaply, and with zero hallucination.
+- **Qualitative Action (AI & Agent's Strength):** Account managers cannot act on a bare number like `0.85`. They need narrative context: *Why is this account at risk? What retention playbook applies? What customized offer should we make?*
+
+By combining both, you see exactly how modern AI systems are built in industry.
+
+---
+
+## 🗺️ The 7-Stage Learning Path
+
+| Tier | Architecture | Technology | What You Learn & Build |
+|---|---|---|---|
+| **01** | **Baseline Classical ML** | Scikit-Learn (Logistic Regression) | Train a model on historical tabular data; feature scaling; predict calibrated churn probabilities (%) in sub-millisecond time. |
+| **02** | **Pure Foundation LLM** | Zero-Shot Prompting (Gemini / OpenAI) | Prompt an LLM directly over raw activity metrics; evaluate qualitative reasoning vs. latency & cost trade-offs. |
+| **03** | **Hybrid ML + LLM** | Scikit-Learn + LLM Narrative | Combine statistical certainty with natural language; ML calculates the exact probability, LLM drafts the retention briefing. |
+| **04** | **Autonomous Agent** | LangChain + Dynamic Tool Calling | Build an agent that decides which tools to call: queries account databases, triggers ML inference, and searches company SOP playbooks. |
+| **05** | **Structured Outputs** | Pydantic Schema Enforcement | Eliminate fragile free-text; enforce guaranteed type-safe JSON objects applicable for downstream APIs and data contracts. |
+| **06** | **Guarded Agent** | Security Guardrails + Sandboxing | Defend against adversarial prompt injections, jailbreaks, and off-topic queries before they reach the agent. |
+| **07** | **Automated Evals** | LLM-as-a-Judge + Benchmarking | Test non-deterministic AI pipelines using a golden dataset, deterministic assertion rules, and automated model-graded rubrics. |
+---
+
+## 🏗️ Architectural Evolution
 
 ```text
 01. Baseline Pure ML
     Tabular Data ──> Logistic Regression ──> Calibrated Churn Probability (%)
 
 02. Pure LLM (Zero-Shot)
-    Tabular Data ──> Foundation Prompt ──> Direct LLM Qualitative Assessment
+    Tabular Data ──> Foundation Prompt ──> Direct Qualitative Assessment
 
 03. Hybrid (ML + LLM)
     Tabular Data ──> Scikit-Learn Model ──> Probability + Context ──> LLM Free-Text Briefing
@@ -27,15 +55,31 @@ All projects solve the same domain problem: identifying at-risk merchant account
 04. Agentic Orchestration
     User Query ──> Autonomous LLM Agent ──> Tool Calling (ML + DB + Playbook) ──> Action Plan
 
-05. Structured Outputs (Production-Grade)
-    Tabular Data ──> ML Probability ──> LLM + Pydantic Schema ──> Type-Safe Object & Validated JSON
+05. Structured Outputs (Production-Applicable Patterns)
+    Tabular Data ──> ML Probability ──> LLM + Pydantic Schema ──> Type-Safe JSON Contract
 
-06. Guarded Agent (Enterprise Security)
+06. Guarded Agent (Defensive Guardrails & Scoping)
     Free Query ──> Injection Defense Guardrail ──> Sandboxed Agent ──> Validated Pydantic Contract
 
 07. Automated Evals & Benchmarking (Quality Assurance)
     Golden Dataset ──> Pipeline SUT ──> Deterministic Rules + LLM-as-a-Judge ──> Audit Scorecard
 ```
+
+---
+
+## 🧭 Engineering Decision Matrix: When to Use What?
+
+| Requirement | 01. ML | 02. LLM | 03. Hybrid | 04. Agent | 05. Structured | 06. Guarded | 07. Evals |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **High-throughput bulk scoring** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | — |
+| **Human-readable explanation** | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | — |
+| **Strict statistical calibration** | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | — |
+| **Autonomous multi-step actions** | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | — |
+| **Direct API / Database integration** | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | — |
+| **Public / Untrusted user inputs** | — | ❌ | ❌ | ❌ | ❌ | ✅ | — |
+| **CI/CD Regression & Quality Gates** | — | — | — | — | — | — | ✅ |
+
+---
 
 ## Quick Start
 
