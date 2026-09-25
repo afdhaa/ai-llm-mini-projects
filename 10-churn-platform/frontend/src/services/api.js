@@ -33,8 +33,9 @@ export const churnApi = {
   retrainModel: (headers) => apiRequest("/api/training/retrain", "POST", null, headers),
   resetDataToDefaults: (headers) => apiRequest("/api/data/reset", "POST", null, headers),
 
-  // Tier 01: Pure ML
+  // Tier 01: Pure ML (Single & Batch)
   predictTier01: (payload, headers) => apiRequest("/api/tier01/predict", "POST", payload, headers),
+  predictBatchTier01: (headers) => apiRequest("/api/tier01/batch", "GET", null, headers),
   getDatasetTier01: (headers) => apiRequest("/api/tier01/dataset", "GET", null, headers),
 
   // Tier 02: Pure Foundation LLM
@@ -56,11 +57,13 @@ export const churnApi = {
   getEvalsDatasetTier07: (headers) => apiRequest("/api/tier07/dataset", "GET", null, headers),
   benchmarkTier07: (payload, headers) => apiRequest("/api/tier07/benchmark", "POST", payload, headers),
 
-  // Tier 08: Contextual RAG
+  // Tier 08: Contextual RAG (Single & Portfolio Matrix)
   ragTier08: (payload, headers) => apiRequest("/api/tier08/rag", "POST", payload, headers),
+  getMatrixTier08: (headers) => apiRequest("/api/tier08/matrix", "GET", null, headers),
 
-  // Tier 09: LangGraph Multi-Agent & HITL
+  // Tier 09: LangGraph Multi-Agent & HITL (Single, Action, Portfolio)
   evaluateTier09: (payload, headers) => apiRequest("/api/tier09/evaluate", "POST", payload, headers),
   actionTier09: (payload, headers) => apiRequest("/api/tier09/action", "POST", payload, headers),
   getAuditTier09: (headers) => apiRequest("/api/tier09/audit", "GET", null, headers),
+  getPortfolioTier09: (headers) => apiRequest("/api/tier09/portfolio", "GET", null, headers),
 };

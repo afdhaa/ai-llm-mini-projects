@@ -485,3 +485,60 @@ def get_audit_trail():
         return jsonify({"success": True, "total_logs": 0, "logs": []})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
+
+@menu09_bp.route("/api/tier09/portfolio", methods=["GET"])
+def get_portfolio_orchestration():
+    """Provide a portfolio-level multi-agent overview of all target stores."""
+    try:
+        from routes.common import load_target_customers
+        targets = load_target_customers()
+
+        accounts = []
+        total_gmv = 0
+        total_payouts = 0
+        hitl_count = 0
+        auto_count = 0
+
+        for t in targets:
+            prof = get_customer_profile(t["customer"])
+            fin = prof["financials"] or {}
+            gmv = float(fin.get("monthly_gmv_idr", 0))
+            payout = float(fin.get("pending_payout_idr", 0))
+            prob = prof["churn_probability"]
+
+            total_gmv += gmv
+            total_payouts += payout
+
+            needs_hitl = (prob >= 0.80) or (payout >= 5000000)
+            if needs_hitl:
+                hitl_count += 1
+            else:
+                auto_count += 1
+
+            accounts.append({
+                "customer": prof["customer"],
+                "churn_probability": prob,
+                "churn_percentage": f"{prob:.1%}",
+                "ml_risk_level": prof["ml_risk_level"],
+                "tier": fin.get("customer_tier", "GROWTH"),
+                "monthly_gmv_idr": gmv,
+                "pending_payout_idr": payout,
+                "requires_hitl": needs_hitl,
+                "governance_status": "PENDING_HUMAN_SIGN_OFF" if needs_hitl else "AUTO_DISPATCH_PERMITTED",
+                "hitl_trigger": "High Risk & Held Payout (> Rp 5M)" if needs_hitl else "Low/Medium Risk & Standard Budget",
+            })
+
+        accounts.sort(key=lambda x: x["churn_probability"], reverse=True)
+
+        return jsonify({
+            "success": True,
+            "total_accounts": len(accounts),
+            "hitl_required_count": hitl_count,
+            "auto_approved_count": auto_count,
+            "portfolio_monthly_gmv_idr": total_gmv,
+            "portfolio_held_payouts_idr": total_payouts,
+            "accounts": accounts,
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500

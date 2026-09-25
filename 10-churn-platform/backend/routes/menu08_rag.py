@@ -91,3 +91,59 @@ def evaluate_rag():
         })
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
+
+
+@menu08_bp.route("/api/tier08/matrix", methods=["GET"])
+def get_rag_matrix():
+    """Return comparative intelligence summary across all target merchants."""
+    try:
+        from routes.common import load_target_customers
+        targets = load_target_customers()
+        playbooks = load_retention_playbook()
+
+        matrix = []
+        for t in targets:
+            prof = get_customer_profile(t["customer"])
+            risk = prof["ml_risk_level"].replace(" RISK", "")
+            pb_match = next((p for p in playbooks if p.get("risk_level", "").upper() == risk), playbooks[0])
+
+            # Diagnosed baseline from tickets
+            tickets = prof["tickets"]
+            has_bug = any("504" in tk.get("message", "") or "webhook" in tk.get("message", "").lower() for tk in tickets)
+            has_pricing = any("komisi" in tk.get("message", "").lower() or "fee" in tk.get("message", "").lower() for tk in tickets)
+            has_closed = any("tutup" in tk.get("message", "").lower() or "likuidasi" in tk.get("message", "").lower() for tk in tickets)
+
+            if has_bug:
+                rc = "TECHNICAL_BUG"
+                sop_ok = False
+                tailored = "Urgent P1 DevOps escalation for webhook fix + unfreeze payout. Vouchers rejected."
+            elif has_pricing:
+                rc = "PRICING_COMMERCIAL"
+                sop_ok = False
+                tailored = "Override vouchers; initiate volume-tiered commercial renegotiation."
+            elif has_closed:
+                rc = "ACCOUNT_LIFECYCLE"
+                sop_ok = False
+                tailored = "Non-preventable churn. Halt marketing campaigns and expedite account closure."
+            else:
+                rc = "GENERAL_SATISFIED"
+                sop_ok = True
+                tailored = "Routine CRM partner loyalty perks; maintain standard account success check-ins."
+
+            matrix.append({
+                "customer": prof["customer"],
+                "churn_probability": prof["churn_probability"],
+                "churn_percentage": f"{prof['churn_probability']:.1%}",
+                "ml_risk_level": prof["ml_risk_level"],
+                "generic_sop_incentive": pb_match.get("incentive"),
+                "ticket_count": len(tickets),
+                "tickets_summary": [f"[{tk.get('ticket_id')}] {tk.get('subject')}" for tk in tickets[:2]],
+                "primary_root_cause": rc,
+                "is_sop_adequate": sop_ok,
+                "tailored_action_summary": tailored,
+            })
+
+        matrix.sort(key=lambda x: x["churn_probability"], reverse=True)
+        return jsonify({"success": True, "total_accounts": len(matrix), "matrix": matrix})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500

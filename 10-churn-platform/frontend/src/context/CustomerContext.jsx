@@ -5,7 +5,7 @@ const CustomerContext = createContext(null);
 
 export function CustomerProvider({ children }) {
   const [targets, setTargets] = useState([]);
-  const [activeCustomer, setActiveCustomer] = useState("Store Critical");
+  const [activeCustomer, setActiveCustomer] = useState("Store Critical"); // specific customer or "ALL"
   const [isDataManagerOpen, setIsDataManagerOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -14,8 +14,8 @@ export function CustomerProvider({ children }) {
       const data = await churnApi.getTargets();
       if (data.targets && data.targets.length > 0) {
         setTargets(data.targets);
-        // If current active customer is not in targets, select first
-        if (!data.targets.some((t) => t.customer === activeCustomer)) {
+        // If current active customer is not "ALL" and not in targets, select first
+        if (activeCustomer !== "ALL" && !data.targets.some((t) => t.customer === activeCustomer)) {
           setActiveCustomer(data.targets[0].customer);
         }
       }

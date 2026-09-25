@@ -54,6 +54,53 @@ def predict_churn():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
 
+@menu01_bp.route("/api/tier01/batch", methods=["GET", "POST"])
+def predict_batch_churn():
+    """Compute calibrated churn predictions for all target customer accounts simultaneously."""
+    t0 = time.time()
+    try:
+        from routes.common import load_target_customers
+        targets = load_target_customers()
+        model = load_ml_model()
+
+        results = []
+        for t in targets:
+            feats = pd.DataFrame([{
+                "transactions": float(t["transactions"]),
+                "active_days": float(t["active_days"]),
+                "inactive_days": float(t["inactive_days"]),
+            }])
+            prob = float(model.predict_proba(feats)[0][1])
+            if prob < 0.20:
+                risk = "NO RISK"
+            elif prob < 0.50:
+                risk = "LOW RISK"
+            elif prob < 0.75:
+                risk = "MEDIUM RISK"
+            else:
+                risk = "HIGH RISK"
+
+            results.append({
+                "customer": t["customer"],
+                "transactions": int(t["transactions"]),
+                "active_days": int(t["active_days"]),
+                "inactive_days": int(t["inactive_days"]),
+                "churn_probability": prob,
+                "churn_percentage": f"{prob:.1%}",
+                "risk_level": risk,
+            })
+
+        results.sort(key=lambda x: x["churn_probability"], reverse=True)
+        latency_ms = round((time.time() - t0) * 1000, 2)
+
+        return jsonify({
+            "success": True,
+            "total_accounts": len(results),
+            "results": results,
+            "latency_ms": latency_ms,
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
 
 @menu01_bp.route("/api/tier01/dataset", methods=["GET"])
 def get_training_dataset():

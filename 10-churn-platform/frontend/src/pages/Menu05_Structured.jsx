@@ -8,10 +8,18 @@ import { useCustomer } from "../context/CustomerContext";
 export default function Menu05_Structured() {
   const { activeCustomer } = useCustomer();
   const { getHeaders } = useSettings();
-  const [mode, setMode] = useState("single");
+  const isAll = activeCustomer === "ALL";
+  const [mode, setMode] = useState(isAll ? "batch" : "single");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  React.useEffect(() => {
+    if (isAll) {
+      setMode("batch");
+    } else {
+      setMode("single");
+    }
+  }, [isAll]);
   const handleRun = async () => {
     setLoading(true);
     try {
