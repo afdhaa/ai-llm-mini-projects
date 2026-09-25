@@ -103,23 +103,23 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
   return (
     <div className="space-y-6 max-w-5xl">
       {/* Header section */}
-      <div className="border-b border-neutral-800 pb-5">
+      <div className="border-b border-neutral-200 pb-5">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-base font-semibold text-neutral-100 tracking-tight">
+            <h1 className="text-base font-semibold text-neutral-900 tracking-tight">
               09. Multi-Agent State Machine & HITL Gate (LangGraph)
             </h1>
-            <p className="text-xs text-neutral-400 mt-1 max-w-xl leading-relaxed">
+            <p className="text-xs text-neutral-500 mt-1 max-w-xl leading-relaxed">
               Coordinates specialized departmental agents (Diagnostics, Finance, and Supervisor) using a cyclic LangGraph state machine. High-impact operational side-effects pause at an interactive human approval gate.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex rounded-md bg-[#121416] p-1 border border-neutral-800 text-xs">
+            <div className="flex rounded-md bg-neutral-100 p-1 border border-neutral-200 text-xs">
               <button
                 onClick={() => setActiveTab("console")}
                 className={`px-3 py-1 rounded transition text-xs font-medium ${
-                  activeTab === "console" ? "bg-neutral-800 text-white" : "text-neutral-400 hover:text-neutral-200"
+                  activeTab === "console" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-900"
                 }`}
               >
                 Deliberation Console
@@ -127,7 +127,7 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
               <button
                 onClick={() => setActiveTab("audit")}
                 className={`px-3 py-1 rounded transition text-xs font-medium ${
-                  activeTab === "audit" ? "bg-neutral-800 text-white" : "text-neutral-400 hover:text-neutral-200"
+                  activeTab === "audit" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-900"
                 }`}
               >
                 Execution Audit Log
@@ -138,7 +138,7 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
               <button
                 onClick={handleStartEvaluation}
                 disabled={loading}
-                className="flex items-center gap-2 rounded-md bg-neutral-100 hover:bg-white text-neutral-950 px-3.5 py-1.5 text-xs font-semibold transition active:scale-[0.99] disabled:opacity-50 shadow-sm"
+                className="flex items-center gap-2 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white px-3.5 py-1.5 text-xs font-semibold transition active:scale-[0.99] disabled:opacity-50 shadow-sm"
               >
                 <Play className="h-3.5 w-3.5 fill-current" />
                 {loading ? "Deliberating..." : `Evaluate ${activeCustomer}`}
@@ -153,73 +153,73 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
           {/* 3 Specialist Reports */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* 1. Diagnostics */}
-            <div className="p-4 rounded-lg border border-neutral-800 bg-[#121416] space-y-2">
-              <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-neutral-500 block pb-1 border-b border-neutral-800">
+            <div className="p-4 rounded-lg border border-neutral-200 bg-white space-y-2 shadow-sm">
+              <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-neutral-400 block pb-1 border-b border-neutral-100">
                 1. Technical Diagnostics
               </span>
               {diag ? (
                 <div className="text-xs space-y-1.5 font-mono">
-                  <div className="flex justify-between items-center text-neutral-300">
-                    <span className="text-neutral-500">Root Cause:</span>
-                    <strong className="text-neutral-200">{diag.root_cause}</strong>
+                  <div className="flex justify-between items-center text-neutral-700">
+                    <span className="text-neutral-400">Root Cause:</span>
+                    <strong className="text-neutral-900">{diag.root_cause}</strong>
                   </div>
-                  <div className="flex justify-between items-center text-neutral-300">
-                    <span className="text-neutral-500">Severity:</span>
-                    <span className="px-1.5 py-0.2 rounded bg-neutral-800 text-neutral-300 font-semibold">{diag.technical_severity}</span>
+                  <div className="flex justify-between items-center text-neutral-700">
+                    <span className="text-neutral-400">Severity:</span>
+                    <span className="px-1.5 py-0.2 rounded bg-neutral-100 text-neutral-800 font-semibold">{diag.technical_severity}</span>
                   </div>
-                  <p className="text-[11px] text-neutral-300 bg-[#0c0d0e] p-2.5 rounded border border-neutral-800 font-sans leading-relaxed line-clamp-3">
+                  <p className="text-[11px] text-neutral-700 bg-neutral-50 p-2.5 rounded border border-neutral-200 font-sans leading-relaxed line-clamp-3">
                     {diag.key_blocker}
                   </p>
                 </div>
               ) : (
-                <p className="text-xs text-neutral-500">Diagnosing...</p>
+                <p className="text-xs text-neutral-400">Diagnosing...</p>
               )}
             </div>
 
             {/* 2. Finance */}
-            <div className="p-4 rounded-lg border border-neutral-800 bg-[#121416] space-y-2">
-              <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-neutral-500 block pb-1 border-b border-neutral-800">
+            <div className="p-4 rounded-lg border border-neutral-200 bg-white space-y-2 shadow-sm">
+              <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-neutral-400 block pb-1 border-b border-neutral-100">
                 2. Commercial Assessment
               </span>
               {fin ? (
                 <div className="text-xs space-y-1.5 font-mono">
-                  <div className="flex justify-between items-center text-neutral-300">
-                    <span className="text-neutral-500">Tier:</span>
-                    <span className="text-neutral-200">{fin.customer_tier}</span>
+                  <div className="flex justify-between items-center text-neutral-700">
+                    <span className="text-neutral-400">Tier:</span>
+                    <span className="text-neutral-900">{fin.customer_tier}</span>
                   </div>
-                  <div className="flex justify-between items-center text-neutral-300">
-                    <span className="text-neutral-500">Exposure:</span>
-                    <span className="text-neutral-200">{fin.financial_risk_verdict}</span>
+                  <div className="flex justify-between items-center text-neutral-700">
+                    <span className="text-neutral-400">Exposure:</span>
+                    <span className="text-neutral-900">{fin.financial_risk_verdict}</span>
                   </div>
-                  <div className="flex justify-between items-center text-neutral-300">
-                    <span className="text-neutral-500">Budget Cap:</span>
-                    <span className="text-neutral-200">Rp {fin.approved_budget_cap_idr?.toLocaleString()}</span>
+                  <div className="flex justify-between items-center text-neutral-700">
+                    <span className="text-neutral-400">Budget Cap:</span>
+                    <span className="text-neutral-900 font-semibold">Rp {fin.approved_budget_cap_idr?.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between items-center text-neutral-300">
-                    <span className="text-neutral-500">Held Payout:</span>
-                    <span className="text-neutral-200 font-semibold">Rp {fin.pending_payout_idr?.toLocaleString()}</span>
+                  <div className="flex justify-between items-center text-neutral-700">
+                    <span className="text-neutral-400">Held Payout:</span>
+                    <span className="text-neutral-900 font-semibold">Rp {fin.pending_payout_idr?.toLocaleString()}</span>
                   </div>
                 </div>
               ) : (
-                <p className="text-xs text-neutral-500">Calculating exposure...</p>
+                <p className="text-xs text-neutral-400">Calculating exposure...</p>
               )}
             </div>
 
             {/* 3. Safety Checkpoint */}
-            <div className="p-4 rounded-lg border border-neutral-800 bg-[#121416] space-y-2">
-              <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-neutral-500 block pb-1 border-b border-neutral-800">
+            <div className="p-4 rounded-lg border border-neutral-200 bg-white space-y-2 shadow-sm">
+              <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-neutral-400 block pb-1 border-b border-neutral-100">
                 3. Safety Gate Status
               </span>
               <div className="text-xs space-y-1.5 font-mono">
-                <div className="flex justify-between items-center text-neutral-300">
-                  <span className="text-neutral-500">Status:</span>
+                <div className="flex justify-between items-center text-neutral-700">
+                  <span className="text-neutral-400">Status:</span>
                   <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${
-                    isPendingReview ? "bg-amber-950/40 text-amber-400 border border-amber-800/60" : "bg-emerald-950/40 text-emerald-400 border border-emerald-800/60"
+                    isPendingReview ? "bg-amber-100 text-amber-800 border border-amber-300" : "bg-emerald-100 text-emerald-800 border border-emerald-300"
                   }`}>
                     {pipelineState.hitl_status}
                   </span>
                 </div>
-                <p className="text-[11px] text-neutral-400 font-sans pt-1 leading-relaxed">
+                <p className="text-[11px] text-neutral-600 font-sans pt-1 leading-relaxed">
                   {prop?.requires_hitl
                     ? prop.hitl_reason
                     : "Low risk / Standard cost -> Safe for Auto-Approval"}
@@ -230,17 +230,17 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
 
           {/* Supervisor Proposal */}
           {prop && (
-            <div className="rounded-lg border border-neutral-800 bg-[#121416] p-5 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+            <div className="rounded-lg border border-neutral-200 bg-white p-5 space-y-4 shadow-sm">
+              <div className="flex items-center justify-between pb-3 border-b border-neutral-100">
                 <div>
-                  <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-400">
+                  <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-500">
                     Supervisor Negotiated Strategy
                   </h3>
-                  <p className="text-xs text-neutral-300 mt-1">{prop.summary}</p>
+                  <p className="text-xs text-neutral-800 mt-1 font-sans">{prop.summary}</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] text-neutral-500 font-mono uppercase block">Total Financial Impact:</span>
-                  <span className="text-lg font-mono font-semibold text-neutral-100 tabular-nums">
+                  <span className="text-[10px] text-neutral-400 font-mono uppercase block">Total Financial Impact:</span>
+                  <span className="text-lg font-mono font-semibold text-neutral-900 tabular-nums">
                     Rp {prop.total_proposed_cost_idr?.toLocaleString()}
                   </span>
                 </div>
@@ -248,7 +248,7 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
 
               {/* Action items table */}
               <div className="space-y-2">
-                <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-400 block">
+                <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-500 block">
                   Action Directives ({prop.action_items?.length || 0}):
                 </span>
                 {prop.action_items?.map((item, idx) => {
@@ -258,8 +258,8 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
                       key={idx}
                       className={`p-3 rounded-lg border transition flex items-start gap-3 text-xs ${
                         isSelected
-                          ? "bg-[#0c0d0e] border-neutral-800"
-                          : "bg-[#0c0d0e]/40 border-neutral-900 opacity-60"
+                          ? "bg-neutral-50/80 border-neutral-200"
+                          : "bg-neutral-100/40 border-neutral-200 opacity-60"
                       }`}
                     >
                       {hitlAction === "selective" && (
@@ -273,22 +273,22 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
                               setSelectedActionIndices(selectedActionIndices.filter((i) => i !== idx));
                             }
                           }}
-                          className="mt-1 h-3.5 w-3.5 rounded border-neutral-700 bg-neutral-900 accent-neutral-300"
+                          className="mt-1 h-3.5 w-3.5 rounded border-neutral-300 accent-neutral-900"
                         />
                       )}
                       <div className="flex-1 space-y-0.5 font-mono">
                         <div className="flex justify-between items-center">
-                          <span className="font-semibold text-neutral-200">
+                          <span className="font-semibold text-neutral-900">
                             [{idx + 1}] [{item.action_type}] {item.title}
                           </span>
                           {item.cost_idr > 0 && (
-                            <span className="text-neutral-400 tabular-nums font-semibold">
+                            <span className="text-neutral-700 tabular-nums font-semibold">
                               Rp {item.cost_idr.toLocaleString()}
                             </span>
                           )}
                         </div>
-                        <p className="text-[11px] text-neutral-400 font-sans">{item.description}</p>
-                        <span className="text-[10px] text-neutral-500 block">Owner: {item.owner_role}</span>
+                        <p className="text-[11px] text-neutral-600 font-sans">{item.description}</p>
+                        <span className="text-[10px] text-neutral-400 block">Owner: {item.owner_role}</span>
                       </div>
                     </div>
                   );
@@ -297,9 +297,9 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
 
               {/* Human-in-the-Loop Decision Box */}
               {isPendingReview && (
-                <div className="rounded-lg border border-neutral-700/80 bg-[#141618] p-4 mt-5 space-y-3">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-200">
-                    <AlertCircle className="h-3.5 w-3.5 text-amber-400" />
+                <div className="rounded-lg border border-amber-300 bg-amber-50/70 p-4 mt-5 space-y-3">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-900">
+                    <AlertCircle className="h-3.5 w-3.5 text-amber-700" />
                     Human Authorization Required Before Dispatch
                   </div>
 
@@ -308,7 +308,7 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
                       <button
                         onClick={() => submitDecision("approve_all")}
                         disabled={executingDecision}
-                        className="rounded-md bg-neutral-100 hover:bg-white text-neutral-950 py-2 px-3 text-xs font-semibold transition active:scale-[0.99] flex items-center justify-center gap-1.5 shadow-sm"
+                        className="rounded-md bg-neutral-900 hover:bg-neutral-800 text-white py-2 px-3 text-xs font-semibold transition active:scale-[0.99] flex items-center justify-center gap-1.5 shadow-sm"
                       >
                         <Check className="h-3.5 w-3.5" />
                         Approve All
@@ -317,7 +317,7 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
                       <button
                         onClick={() => setHitlAction("selective")}
                         disabled={executingDecision}
-                        className="rounded-md border border-neutral-700 bg-neutral-800/80 hover:bg-neutral-700 py-2 px-3 text-xs font-medium text-neutral-200 transition"
+                        className="rounded-md border border-neutral-300 bg-white hover:bg-neutral-50 py-2 px-3 text-xs font-medium text-neutral-800 transition shadow-sm"
                       >
                         Item-by-Item Review
                       </button>
@@ -325,7 +325,7 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
                       <button
                         onClick={() => setHitlAction("steer")}
                         disabled={executingDecision}
-                        className="rounded-md border border-neutral-700 bg-neutral-800/80 hover:bg-neutral-700 py-2 px-3 text-xs font-medium text-neutral-200 transition"
+                        className="rounded-md border border-neutral-300 bg-white hover:bg-neutral-50 py-2 px-3 text-xs font-medium text-neutral-800 transition shadow-sm"
                       >
                         Steer / Revise Plan
                       </button>
@@ -333,7 +333,7 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
                       <button
                         onClick={() => submitDecision("reject")}
                         disabled={executingDecision}
-                        className="rounded-md border border-red-900/60 bg-red-950/20 hover:bg-red-950/40 text-red-300 py-2 px-3 text-xs font-medium transition flex items-center justify-center gap-1.5"
+                        className="rounded-md border border-red-300 bg-red-50 hover:bg-red-100 text-red-700 py-2 px-3 text-xs font-medium transition flex items-center justify-center gap-1.5"
                       >
                         <X className="h-3.5 w-3.5" />
                         Reject All
@@ -341,20 +341,20 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
                     </div>
                   ) : hitlAction === "selective" ? (
                     <div className="space-y-2.5 pt-1">
-                      <p className="text-xs text-neutral-300 font-mono">
+                      <p className="text-xs text-neutral-800 font-mono">
                         Select individual actions to dispatch ({selectedActionIndices.length} selected):
                       </p>
                       <div className="flex gap-2.5">
                         <button
                           onClick={() => submitDecision("selective", { approved_indices: selectedActionIndices })}
                           disabled={executingDecision}
-                          className="rounded-md bg-neutral-100 hover:bg-white text-neutral-950 px-3.5 py-1.5 text-xs font-semibold transition"
+                          className="rounded-md bg-neutral-900 hover:bg-neutral-800 text-white px-3.5 py-1.5 text-xs font-semibold transition"
                         >
                           Confirm Dispatch ({selectedActionIndices.length} actions)
                         </button>
                         <button
                           onClick={() => setHitlAction(null)}
-                          className="rounded-md border border-neutral-700 bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-300"
+                          className="rounded-md border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-medium text-neutral-700"
                         >
                           Cancel
                         </button>
@@ -362,7 +362,7 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
                     </div>
                   ) : hitlAction === "steer" ? (
                     <div className="space-y-2.5 pt-1">
-                      <label className="text-xs text-neutral-300 block">
+                      <label className="text-xs text-neutral-800 block">
                         Enter guidance for the Supervisor Agent to adjust the proposal:
                       </label>
                       <div className="flex gap-2">
@@ -371,19 +371,19 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
                           value={steeringText}
                           onChange={(e) => setSteeringText(e.target.value)}
                           placeholder="e.g. Batalkan fee waiver, cukup unfreeze payout dan eskalasi P1 DevOps..."
-                          className="flex-1 rounded-md border border-neutral-700 bg-[#0c0d0e] px-3 py-1.5 text-xs text-neutral-200 focus:border-neutral-500 focus:outline-none"
+                          className="flex-1 rounded-md border border-neutral-300 bg-white px-3 py-1.5 text-xs text-neutral-900 focus:border-neutral-500 focus:outline-none"
                         />
                         <button
                           onClick={() => submitDecision("steer", { feedback: steeringText })}
                           disabled={executingDecision || !steeringText.trim()}
-                          className="rounded-md bg-neutral-100 hover:bg-white text-neutral-950 px-3.5 py-1.5 text-xs font-semibold transition flex items-center gap-1.5"
+                          className="rounded-md bg-neutral-900 hover:bg-neutral-800 text-white px-3.5 py-1.5 text-xs font-semibold transition flex items-center gap-1.5"
                         >
                           <Send className="h-3 w-3" />
                           Re-Synthesize
                         </button>
                         <button
                           onClick={() => setHitlAction(null)}
-                          className="rounded-md border border-neutral-700 bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-300"
+                          className="rounded-md border border-neutral-300 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700"
                         >
                           Cancel
                         </button>
@@ -397,19 +397,19 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
 
           {/* Execution Log Table */}
           {pipelineState.execution_logs && pipelineState.execution_logs.length > 0 && (
-            <div className="rounded-lg border border-neutral-800 bg-[#121416] p-4 space-y-2.5">
-              <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-400 block border-b border-neutral-800 pb-2">
+            <div className="rounded-lg border border-neutral-200 bg-white p-4 space-y-2.5 shadow-sm">
+              <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-500 block border-b border-neutral-100 pb-2">
                 Operational Side-Effects Dispatched ({pipelineState.execution_logs.length})
               </span>
               <div className="space-y-1.5 font-mono text-xs">
                 {pipelineState.execution_logs.map((log, i) => (
-                  <div key={i} className="p-2.5 rounded bg-[#0c0d0e] border border-neutral-800/80 space-y-1">
+                  <div key={i} className="p-2.5 rounded bg-neutral-50 border border-neutral-200 space-y-1">
                     <div className="flex justify-between items-center">
-                      <span className="text-neutral-200 font-medium">
+                      <span className="text-neutral-900 font-medium">
                         [{log.status}] [{log.action_type}] ──▶ {log.target_system}
                       </span>
                     </div>
-                    <p className="text-[11px] text-neutral-400 font-sans">{log.message}</p>
+                    <p className="text-[11px] text-neutral-600 font-sans">{log.message}</p>
                   </div>
                 ))}
               </div>
@@ -420,9 +420,9 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
 
       {/* Audit Trail Tab */}
       {activeTab === "audit" && (
-        <div className="rounded-lg border border-neutral-800 bg-[#121416] p-4 space-y-3">
-          <div className="flex items-center justify-between pb-2 border-b border-neutral-800">
-            <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-400">
+        <div className="rounded-lg border border-neutral-200 bg-white p-4 space-y-3 shadow-sm">
+          <div className="flex items-center justify-between pb-2 border-b border-neutral-100">
+            <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-500">
               Audit Trail Records (data/execution_audit.json)
             </span>
             <span className="text-xs font-mono text-neutral-500">{auditLogs.length} entries</span>
@@ -431,16 +431,16 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
           {auditLogs.length > 0 ? (
             <div className="space-y-2">
               {auditLogs.map((log, idx) => (
-                <div key={idx} className="p-3 rounded bg-[#0c0d0e] border border-neutral-800 text-xs space-y-1 font-mono">
-                  <span className="text-neutral-200 font-medium">
+                <div key={idx} className="p-3 rounded bg-neutral-50 border border-neutral-200 text-xs space-y-1 font-mono">
+                  <span className="text-neutral-900 font-medium">
                     [{log.status}] [{log.action_type}] ──▶ {log.target_system}
                   </span>
-                  <p className="text-neutral-400 font-sans text-[11px]">{log.message}</p>
+                  <p className="text-neutral-600 font-sans text-[11px]">{log.message}</p>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-xs text-neutral-500 py-6 text-center font-mono">
+            <p className="text-xs text-neutral-400 py-6 text-center font-mono">
               No audit logs recorded yet. Authorize actions in Menu 09 to record entries.
             </p>
           )}

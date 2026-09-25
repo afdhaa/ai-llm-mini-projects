@@ -13,7 +13,7 @@ from routes.menu06_guarded import menu06_bp
 from routes.menu07_evals import menu07_bp
 from routes.menu08_rag import menu08_bp
 from routes.menu09_langgraph import menu09_bp
-
+from routes.data_manager import data_mgr_bp
 load_dotenv()
 
 app = Flask(__name__)
@@ -30,7 +30,7 @@ app.register_blueprint(menu06_bp)
 app.register_blueprint(menu07_bp)
 app.register_blueprint(menu08_bp)
 app.register_blueprint(menu09_bp)
-
+app.register_blueprint(data_mgr_bp)
 
 @app.route("/api/health", methods=["GET"])
 def health():

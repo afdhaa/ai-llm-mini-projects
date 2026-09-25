@@ -1,0 +1,84 @@
+[
+  {
+    "action_type": "DEVOPS_INCIDENT",
+    "target_system": "PagerDuty & Jira Service Desk",
+    "payload": {
+      "project": "DEV",
+      "priority": "P1",
+      "summary": "[CRITICAL CHURN BLOCKER] Store Critical: P1 Incident: Root-cause webhook 504 failures & idempotently reconcile 120+ hung orders (TCK-1031)",
+      "assignee_role": "Lead DevOps",
+      "description": "1) Declare Sev-1 incident; assign incident commander and war-room channel. 2) Root-cause the API gateway/webhook 504 timeouts from the Sept 1 Flash Sale window (gateway logs, upstream payment-provider latency, retry/idempotency configuration); deploy permanent fix with regression tests. 3) Execute idempotent order-state reconciliation for the 120+ hung orders: re-query payment provider for true settlement status, safely flip merchant-side 'unpaid' states to paid where buyer funds were debited, emit corrected webhooks, and prevent duplicate captures/refunds. 4) Produce a chargeback-liability evidence pack for the Sept 1 incident. 5) Stand up webhook monitoring/alerting with p99 latency SLO to prevent recurrence. 6) Hand RCA findings to Commercial for the renewal conversation.",
+      "sla_hours": 4
+    },
+    "status": "DISPATCHED",
+    "message": "Dispatched P1 Incident to PagerDuty & Jira Service Desk. SLA: 4 hours."
+  },
+  {
+    "action_type": "FINANCE_PAYOUT_RELEASE",
+    "target_system": "Safety Interceptor",
+    "payload": {
+      "action_title": "Expedite full release of Rp 45,000,000 held payout with committed 24h SLA (TCK-1032)",
+      "cost_idr": 45000000.0
+    },
+    "status": "SKIPPED",
+    "message": "Action 'Expedite full release of Rp 45,000,000 held payout with committed 24h SLA (TCK-1032)' was skipped / omitted by operator during selective review."
+  },
+  {
+    "action_type": "CRM_OUTREACH",
+    "target_system": "Zendesk & CRM Outreach Module",
+    "payload": {
+      "customer": "Store Critical",
+      "task": "Executive recovery call within 24h — apology + remediation commitments (no discount-led pitch)",
+      "assigned_to": "Senior Account Manager",
+      "instructions": "1) Senior Account Manager + executive sponsor (Head of Payments or CTO) hold a direct call with merchant management. 2) Explicitly own all three failures: TCK-1031 (webhook outage; ticket closed without resolution), TCK-1032 (Rp 45M payout hold + templated CS responses), TCK-1033 (checkout shutdown). 3) Present committed remediation: P1 fix status, 24h payout SLA, order-reconciliation timeline. 4) Do NOT lead with discounts/vouchers — lead with the payout release and technical fixes to avoid misdiagnosis signaling. 5) Schedule the priority technical onboarding session (retained SOP element) to support checkout reactivation. 6) Secure merchant agreement to re-enable platform checkout ahead of the 5-day renewal decision."
+    },
+    "status": "DISPATCHED",
+    "message": "Created high-touch outreach task in Zendesk & CRM Outreach Module."
+  },
+  {
+    "action_type": "FEE_WAIVER_OR_DISCOUNT",
+    "target_system": "Billing & Subscription Gateway",
+    "payload": {
+      "customer": "Store Critical",
+      "credit_value_idr": 6400000.0,
+      "type": "PLATFORM_FEE_WAIVER",
+      "notes": "1) Issue a full waiver of one month's platform fee (IDR 6,400,000) — strictly conditional, never unconditional goodwill. 2) Activation conditions: (a) merchant re-enables platform checkout, (b) 12-month renewal signed within the 5-day window or an agreed short extension. 3) Credit against next invoice upon condition verification; no cash outlay. 4) Deliberately replaces the generic SOP's unconditional voucher + waiver, which would reward a P1 failure and further erode trust."
+    },
+    "status": "DISPATCHED",
+    "message": "Applied platform fee credit / waiver valued at Rp 6,400,000."
+  },
+  {
+    "action_type": "COMMERCIAL_RENEGOTIATION",
+    "target_system": "Salesforce Enterprise CRM",
+    "payload": {
+      "account": "Store Critical",
+      "stage": "CONTRACT_RENEGOTIATION",
+      "lead": "Senior Account Manager",
+      "notes": "1) Present renewal package: conditional platform fee credit of IDR 4,100,000 released only when post-reactivation monthly GMV reaches ≥ IDR 160,000,000 (50% of baseline) within 30 days, proving genuine recovery. 2) Negotiate enhanced SLA addendum: webhook availability/latency SLO, committed settlement SLA, and a named payment-incident escalation protocol. 3) Target signature within the 5-day renewal window; fallback is a 14-day bridge extension at current terms to allow technical proof points — never a discount escalation. 4) All economics drawn strictly from the approved IDR 12M cap."
+    },
+    "status": "DISPATCHED",
+    "message": "Logged high-priority commercial contract renegotiation in Salesforce Enterprise CRM."
+  },
+  {
+    "action_type": "FEE_WAIVER_OR_DISCOUNT",
+    "target_system": "Billing & Subscription Gateway",
+    "payload": {
+      "customer": "Store Critical",
+      "credit_value_idr": 1500000.0,
+      "type": "PLATFORM_FEE_WAIVER",
+      "notes": "1) Ring-fence IDR 1,500,000 of the retention cap as an evidence-gated reserve for Sept 1 chargeback/liability losses arising from the 120+ hung orders. 2) Release only after DevOps RCA proves platform causation; reimburse the verified merchant-borne loss up to the reserve limit. 3) Requires Finance sign-off on the evidence pack before any disbursement. 4) If verified losses exceed the reserve, Finance to assess liability treatment outside the retention budget."
+    },
+    "status": "DISPATCHED",
+    "message": "Applied platform fee credit / waiver valued at Rp 1,500,000."
+  },
+  {
+    "action_type": "CRM_OUTREACH",
+    "target_system": "Safety Interceptor",
+    "payload": {
+      "action_title": "Publish merchant-facing RCA and enforce payment-incident support protocol",
+      "cost_idr": 0.0
+    },
+    "status": "SKIPPED",
+    "message": "Action 'Publish merchant-facing RCA and enforce payment-incident support protocol' was skipped / omitted by operator during selective review."
+  }
+]

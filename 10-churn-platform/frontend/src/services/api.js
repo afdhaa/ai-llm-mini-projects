@@ -19,7 +19,19 @@ export async function apiRequest(endpoint, method = "GET", body = null, headers 
 }
 
 export const churnApi = {
+  // Common / Customer profiles
   getCustomers: (headers) => apiRequest("/api/customers", "GET", null, headers),
+
+  // Dynamic Targets & Dataset Management
+  getTargets: (headers) => apiRequest("/api/targets", "GET", null, headers),
+  upsertTarget: (payload, headers) => apiRequest("/api/targets", "POST", payload, headers),
+  deleteTarget: (customerName, headers) => apiRequest(`/api/targets/${encodeURIComponent(customerName)}`, "DELETE", null, headers),
+
+  getTrainingData: (headers) => apiRequest("/api/training", "GET", null, headers),
+  addTrainingRow: (payload, headers) => apiRequest("/api/training", "POST", payload, headers),
+  deleteTrainingRow: (customerName, headers) => apiRequest(`/api/training/${encodeURIComponent(customerName)}`, "DELETE", null, headers),
+  retrainModel: (headers) => apiRequest("/api/training/retrain", "POST", null, headers),
+  resetDataToDefaults: (headers) => apiRequest("/api/data/reset", "POST", null, headers),
 
   // Tier 01: Pure ML
   predictTier01: (payload, headers) => apiRequest("/api/tier01/predict", "POST", payload, headers),

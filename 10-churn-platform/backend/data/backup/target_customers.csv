@@ -1,0 +1,6 @@
+customer,transactions,active_days,inactive_days
+Store Safe,850,28,1
+Store Stable,350,22,8
+Store Watchlist,300,18,12
+Store Critical,45,5,30
+Store Inactive,45,0,30

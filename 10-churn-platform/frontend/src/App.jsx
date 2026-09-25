@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Sidebar, { MENUS } from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import ModelSettingsModal from "./components/ModelSettingsModal";
+import DataManagerModal from "./components/DataManagerModal";
+import { useCustomer } from "./context/CustomerContext";
 
 // 9 Dedicated Menu Pages
 import Menu01_PureML from "./pages/Menu01_PureML";
@@ -16,7 +18,7 @@ import Menu09_LangGraphHITL from "./pages/Menu09_LangGraphHITL";
 
 export default function App() {
   const [activeMenu, setActiveMenu] = useState("tier01");
-  const [activeCustomer, setActiveCustomer] = useState("Store Critical");
+  const { activeCustomer } = useCustomer();
 
   const currentMenu = MENUS.find((m) => m.id === activeMenu) || MENUS[0];
 
@@ -46,18 +48,14 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#fafafa] font-sans text-neutral-900">
       {/* 9-Menu Sidebar */}
       <Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
 
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Topbar with Customer Selector & Active Model Chip */}
-        <Topbar
-          activeCustomer={activeCustomer}
-          setActiveCustomer={setActiveCustomer}
-          activeMenuTitle={`${currentMenu.number}. ${currentMenu.title}`}
-        />
+        <Topbar activeMenuTitle={`${currentMenu.number}. ${currentMenu.title}`} />
 
         {/* Scrollable Page Body */}
         <main className="flex-1 overflow-y-auto p-8">
@@ -67,6 +65,9 @@ export default function App() {
 
       {/* Dynamic Model Settings Modal */}
       <ModelSettingsModal />
+
+      {/* Dynamic Dataset & Target Customer Manager Modal */}
+      <DataManagerModal />
     </div>
   );
 }
