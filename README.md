@@ -13,7 +13,7 @@ Most tutorials teach **Machine Learning** (Scikit-Learn, tabular data, statistic
 3. **How do we evolve a bare probability score into an autonomous, action-taking system?**
 4. **How do we apply production-applicable patterns (schema validation, defensive guardrails, automated evals) to an experimental LLM prototype?**
 
-This repository answers those questions by exploring **the exact same business problem across 8 progressive architectural tiers**—taking you step-by-step from a simple Logistic Regression model to an autonomous agent with defensive guardrails, automated evals, and contextual RAG.
+This repository answers those questions by exploring **the exact same business problem across 9 progressive architectural tiers**—taking you step-by-step from a simple Logistic Regression model to an autonomous agent with defensive guardrails, automated evals, contextual RAG, and LangGraph multi-agent state machines with Human-in-the-Loop gates.
 
 ---
 ## 💡 The Real-World Use Case: Customer Churn & Retention
@@ -27,7 +27,7 @@ By combining both, you see exactly how modern AI systems are built in industry.
 
 ---
 
-## 🗺️ The 8-Stage Learning Path
+## 🗺️ The 9-Stage Learning Path
 
 | Tier | Architecture | Technology | What You Learn & Build |
 |---|---|---|---|
@@ -39,7 +39,7 @@ By combining both, you see exactly how modern AI systems are built in industry.
 | **06** | **Guarded Agent** | Security Guardrails + Sandboxing | Defend against adversarial prompt injections, jailbreaks, and off-topic queries before they reach the agent. |
 | **07** | **Automated Evals** | LLM-as-a-Judge + Benchmarking | Test non-deterministic AI pipelines using a golden dataset, deterministic assertion rules, and automated model-graded rubrics. |
 | **08** | **Contextual RAG** | Vector Similarity + Hybrid Synthesis | Reconcile quantitative ML churn scores against qualitative customer support tickets to uncover true root causes and prevent tone-deaf retention offers. |
-
+| **09** | **State Machine & HITL** | LangGraph + Multi-Agent Orchestration | Coordinate specialized agents (Diagnostics, Finance, Supervisor) and enforce Human-in-the-Loop approval checkpoints before dispatching operational side-effects. |
 ---
 
 ## 🏗️ Architectural Evolution
@@ -68,22 +68,27 @@ By combining both, you see exactly how modern AI systems are built in industry.
 
 08. Contextual RAG (Unstructured Customer Signals)
     Tabular ML + Support Tickets (RAG) ──> Hybrid Synthesis ──> Root Cause Diagnosis & Tailored Action
-```
+
+09. Multi-Agent State Machine & HITL Gate (Production Action Dispatching)
+    Tabular ML + Financials + Tickets ──> LangGraph (Tech + Finance + Lead) ──> HITL Safety Interceptor ──> Dispatched Side-Effects (Banking/CRM/Jira)
 
 ---
 
 ## 🧭 Engineering Decision Matrix: When to Use What?
 
-| Requirement | 01. ML | 02. LLM | 03. Hybrid | 04. Agent | 05. Structured | 06. Guarded | 07. Evals | 08. RAG |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **High-throughput bulk scoring** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | — | — |
-| **Human-readable explanation** | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | — | ✅ |
-| **Strict statistical calibration** | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | — | ✅ |
-| **Autonomous multi-step actions** | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | — | — |
-| **Direct API / Database integration** | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | — | ✅ |
-| **Public / Untrusted user inputs** | — | ❌ | ❌ | ❌ | ❌ | ✅ | — | — |
-| **CI/CD Regression & Quality Gates** | — | — | — | — | — | — | ✅ | — |
-| **Unstructured text context (Tickets/Chat)** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | — | ✅ |
+| Requirement | 01. ML | 02. LLM | 03. Hybrid | 04. Agent | 05. Structured | 06. Guarded | 07. Evals | 08. RAG | 09. LangGraph |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **High-throughput bulk scoring** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | — | — | — |
+| **Human-readable explanation** | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | — | ✅ | ✅ |
+| **Strict statistical calibration** | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | — | ✅ | ✅ |
+| **Autonomous multi-step actions** | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | — | — | ✅ |
+| **Direct API / Database integration** | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | — | ✅ | ✅ |
+| **Public / Untrusted user inputs** | — | ❌ | ❌ | ❌ | ❌ | ✅ | — | — | ✅ |
+| **CI/CD Regression & Quality Gates** | — | — | — | — | — | — | ✅ | — | — |
+| **Unstructured text context (Tickets/Chat)** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | — | ✅ | ✅ |
+| **Multi-agent departmental debate** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | — | ❌ | ✅ |
+| **Human-in-the-Loop (HITL) safety gate** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | — | ❌ | ✅ |
+| **Operational side-effects dispatching** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | — | ❌ | ✅ |
 ---
 
 ## Quick Start
@@ -152,13 +157,21 @@ pip install -r requirements.txt
 cp .env.example .env  # configure your provider & API key
 python src/train.py
 python src/main.py --id "Store Critical"
+
+# 9. Multi-Agent State Machine & Human-in-the-Loop (LangGraph)
+cd ../09-churn-langgraph
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env  # configure your provider & API key (supports Z.ai, OpenAI, Gemini, Claude)
+python src/train.py
+python src/main.py --id "Store Critical"
 ```
 
 ---
 
 ## Supported LLM Providers
 
-Projects `02` through `08` support multiple model providers configured via `.env`:
+Projects `02` through `09` support multiple model providers configured via `.env`:
 
 - **Google Gemini** (default): `AI_PROVIDER=gemini`
 - **OpenAI**: `AI_PROVIDER=openai` (`gpt-4o-mini`, etc.)

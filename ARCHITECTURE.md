@@ -1,6 +1,6 @@
 # Architecture Overview
 
-This repository demonstrates eight progressive architectures solving the same domain problem: **Customer Churn Prediction and Retention Strategy**.
+This repository demonstrates nine progressive architectures solving the same domain problem: **Customer Churn Prediction and Retention Strategy**.
 
 ```text
 Phase 1: Foundations to Autonomous Exploration (Tiers 01 - 04)
@@ -16,6 +16,13 @@ Phase 2: Production Hardening, Quality & RAG (Tiers 05 - 08)       ▼
 │  Pydantic   │───> │ 3-Layer Sec │───> │  LLM-as-a-  │───> │ Hybrid ML + │
 │ Structured  │     │  Sandboxing │     │  Judge SUT  │     │ Support RAG │
 └─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
+                                                                   │
+Phase 3: Multi-Agent Collaboration & Action Execution (Tier 09)    ▼
+                                                            ┌─────────────┐
+                                                            │09. LangGraph│
+                                                            │ StateGraph  │
+                                                            │ HITL Gates  │
+                                                            └─────────────┘
 ```
 
 ---
@@ -297,16 +304,64 @@ Target Account: "Store Critical"
 - **Artifacts**: Calibrated ML model (`models/churn_model.joblib`), Vector Retriever index, validated JSON reports.
 ---
 
+## Tier 9: Multi-Agent State Machine & Human-in-the-Loop (`09-churn-langgraph`)
+
+Coordinates specialized departmental agents (Diagnostics, Finance, Supervisor) and enforces an interactive **Human-in-the-Loop (HITL)** checkpoint before dispatching live side-effects (banking payouts, Jira P1 bugs, fee waivers, CRM tasks).
+
+```text
+Target Account: "Store Critical"
+          │
+          ▼
+[Scikit-Learn ML] ───▶ Calibrated Churn Probability: 99.3% [HIGH RISK]
+          │
+          ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ LANGGRAPH STATE MACHINE (StateGraph + MemorySaver)                     │
+│                                                                        │
+│ 1. Technical Specialist (diagnose_node):                               │
+│    Root Cause: TECHNICAL_BUG | Severity: CRITICAL_P1 | Blocker: 504s   │
+│                                                                        │
+│ 2. Commercial Specialist (finance_node):                               │
+│    Exposure: HIGH_EXPOSURE | Payout Held: Rp 45M | Budget Cap: Rp 12M  │
+│                                                                        │
+│ 3. Retention Supervisor (synthesizer_node):                            │
+│    Overrides discount SOP -> Proposes payout release + DevOps fix      │
+│    Safety Trigger Evaluation -> requires_hitl = True (Cost > Rp 5M)    │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ 4. HUMAN-IN-THE-LOOP SAFETY GATE (hitl_gate_node)                      │
+│ Pauses execution via LangGraph checkpointer (interrupt_after)          │
+│ Operator evaluates proposal and enters [y]es / [n]o in terminal        │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │ (Approved by Human Operator)
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ 5. ACTION DISPATCHER (execution_node)                                  │
+│ - Dispatches Payout Release to Banking Ledger (Rp 45.000.000)          │
+│ - Dispatches P1 Incident to PagerDuty & Jira Service Desk              │
+│ - Dispatches Fee Waiver to Billing Gateway (Rp 9.600.000)              │
+│ - Dispatches Outreach & Renewal Tasks to Salesforce CRM                │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+- **Characteristics**: Role specialization; departmental checks and balances; interactive human checkpoints; autonomous action execution with audit trails.
+- **Input Data**: `data/customers.csv`, `data/target_customers.csv`, `data/retention_playbook.csv`, `data/support_tickets.json`, `data/accounts_financials.json`.
+- **Artifacts**: Calibrated ML model (`models/churn_model.joblib`), StateGraph checkpointer, operational execution logs.
+
+---
+
 ## Architecture Comparison Matrix
 
-| Dimension | 01 - Churn ML | 02 - Churn LLM | 03 - Churn ML + LLM | 04 - Churn LangChain | 05 - Structured Output | 06 - Guarded Agent | 07 - Automated Evals | 08 - Contextual RAG |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Paradigm** | Traditional ML | Foundation LLM | Hybrid (ML + LLM) | Agentic AI | Schema-Enforced AI | Guarded Enterprise AI | AI Quality Assurance | Context-Aware Hybrid AI |
-| **Primary Audience** | Data Pipelines | Human Analyst | Operations Team | Human Analyst (Chat) | Backend / API Services | Public / Enterprise APIs | Engineering Teams / CI/CD | Operations / Account Execs |
-| **Input Format** | CSV Records | Target Account | Target Account | Open-ended Query | Target Data (Batch/Single) | Free Query (Protected) | Golden Test Dataset | Tabular Data + Tickets |
-| **Injection Defense** | N/A | None | None | None | Basic (Schema Bound) | Active 3-Layer Guardrail | Automated Injection Test | Schema Contract Bound |
-| **Output Type** | Numeric float | Free-Text | Free-Text | Free-Text | Validated Pydantic / JSON | Validated Pydantic / JSON | Audit Matrix & Report JSON | Validated Pydantic Report |
-| **Evaluation Method** | ROC-AUC / Accuracy | None | None | None | Pydantic Validation | Pydantic Validation | Rules + LLM-as-a-Judge | Schema Validation + Root Cause |
-| **Control Flow** | Static Sequential | Static Sequential | Static Sequential | Dynamic Loop | Static Sequential | Guarded Dynamic Loop | Automated Test Harness | Hybrid Multi-Modal Sequential |
-| **Tool Execution** | None | None | None | Dynamic (4 Tools) | None (Schema Binding) | Sandboxed (4 Tools) | Sandboxed Pipeline (SUT) | Semantic Retriever + ML |
-| **Token Usage** | None | Single (~300) | Single (~270) | Cumulative (~4.8k) | Single (~900 - 1.7k) | Cumulative (~4k - 5k) | Benchmarked per Test Case | Single (~800 - 1.5k) |
+| Dimension | 01 - Churn ML | 02 - Churn LLM | 03 - Churn ML + LLM | 04 - Churn LangChain | 05 - Structured Output | 06 - Guarded Agent | 07 - Automated Evals | 08 - Contextual RAG | 09 - LangGraph HITL |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Paradigm** | Traditional ML | Foundation LLM | Hybrid (ML + LLM) | Agentic AI | Schema-Enforced AI | Guarded Enterprise AI | AI Quality Assurance | Context-Aware Hybrid AI | Multi-Agent State Machine & HITL |
+| **Primary Audience** | Data Pipelines | Human Analyst | Operations Team | Human Analyst (Chat) | Backend / API Services | Public / Enterprise APIs | Engineering Teams / CI/CD | Operations / Account Execs | Enterprise Ops & Cross-Dept Squads |
+| **Input Format** | CSV Records | Target Account | Target Account | Open-ended Query | Target Data (Batch/Single) | Free Query (Protected) | Golden Test Dataset | Tabular Data + Tickets | Tabular + Tickets + Financials |
+| **Injection Defense** | N/A | None | None | None | Basic (Schema Bound) | Active 3-Layer Guardrail | Automated Injection Test | Schema Contract Bound | Schema Bound + Human Gate |
+| **Output Type** | Numeric float | Free-Text | Free-Text | Free-Text | Validated Pydantic / JSON | Validated Pydantic / JSON | Audit Matrix & Report JSON | Validated Pydantic Report | Dispatched Actions + Audit Log |
+| **Evaluation Method** | ROC-AUC / Accuracy | None | None | None | Pydantic Validation | Pydantic Validation | Rules + LLM-as-a-Judge | Schema Validation + Root Cause | Multi-Agent Deliberation + Human Sign-off |
+| **Control Flow** | Static Sequential | Static Sequential | Static Sequential | Dynamic Loop | Static Sequential | Guarded Dynamic Loop | Automated Test Harness | Hybrid Multi-Modal Sequential | LangGraph Cyclic/StateGraph with Checkpoint Interrupt |
+| **Tool Execution** | None | None | None | Dynamic (4 Tools) | None (Schema Binding) | Sandboxed (4 Tools) | Sandboxed Pipeline (SUT) | Semantic Retriever + ML | Production Action Dispatchers (Banking, Jira, CRM) |
+| **Token Usage** | None | Single (~300) | Single (~270) | Cumulative (~4.8k) | Single (~900 - 1.7k) | Cumulative (~4k - 5k) | Benchmarked per Test Case | Single (~800 - 1.5k) | Cumulative Across Agents (~12k - 14k) |
