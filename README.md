@@ -13,7 +13,7 @@ Most tutorials teach **Machine Learning** (Scikit-Learn, tabular data, statistic
 3. **How do we evolve a bare probability score into an autonomous, action-taking system?**
 4. **How do we apply production-applicable patterns (schema validation, defensive guardrails, automated evals) to an experimental LLM prototype?**
 
-This repository answers those questions by exploring **the exact same business problem across 9 progressive architectural tiers**—taking you step-by-step from a simple Logistic Regression model to an autonomous agent with defensive guardrails, automated evals, contextual RAG, and LangGraph multi-agent state machines with Human-in-the-Loop gates.
+This repository answers those questions by exploring **the exact same business problem across 10 progressive architectural tiers**—taking you step-by-step from a simple Logistic Regression model to autonomous agents, security guardrails, automated evals, contextual RAG, LangGraph multi-agent state machines, and a full-stack unified web platform.
 
 ---
 ## 💡 The Real-World Use Case: Customer Churn & Retention
@@ -27,7 +27,7 @@ By combining both, you see exactly how modern AI systems are built in industry.
 
 ---
 
-## 🗺️ The 9-Stage Learning Path
+## 🗺️ The 10-Stage Learning Path
 
 | Tier | Architecture | Technology | What You Learn & Build |
 |---|---|---|---|
@@ -40,7 +40,7 @@ By combining both, you see exactly how modern AI systems are built in industry.
 | **07** | **Automated Evals** | LLM-as-a-Judge + Benchmarking | Test non-deterministic AI pipelines using a golden dataset, deterministic assertion rules, and automated model-graded rubrics. |
 | **08** | **Contextual RAG** | Vector Similarity + Hybrid Synthesis | Reconcile quantitative ML churn scores against qualitative customer support tickets to uncover true root causes and prevent tone-deaf retention offers. |
 | **09** | **State Machine & HITL** | LangGraph + Multi-Agent Orchestration | Coordinate specialized agents (Diagnostics, Finance, Supervisor) and enforce Human-in-the-Loop approval checkpoints before dispatching operational side-effects. |
----
+| **10** | **Unified Web Platform** | Flask REST API + React 18 Dashboard | Full-stack platform unifying Tiers 01–09 with 9 dedicated menus, dynamic in-browser model configuration (zero .env dependency), and interactive web HITL console. |
 
 ## 🏗️ Architectural Evolution
 
@@ -72,23 +72,26 @@ By combining both, you see exactly how modern AI systems are built in industry.
 09. Multi-Agent State Machine & HITL Gate (Production Action Dispatching)
     Tabular ML + Financials + Tickets ──> LangGraph (Tech + Finance + Lead) ──> HITL Safety Interceptor ──> Dispatched Side-Effects (Banking/CRM/Jira)
 
+10. Unified Full-Stack Platform (Interactive 9-Menu Web Workspace)
+    React 18 UI (9 Menus + In-Browser Model Config) ──> Flask REST API ──> Modular Execution of Tiers 01–09 + Web HITL Console
 ---
 
 ## 🧭 Engineering Decision Matrix: When to Use What?
 
-| Requirement | 01. ML | 02. LLM | 03. Hybrid | 04. Agent | 05. Structured | 06. Guarded | 07. Evals | 08. RAG | 09. LangGraph |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **High-throughput bulk scoring** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | — | — | — |
-| **Human-readable explanation** | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | — | ✅ | ✅ |
-| **Strict statistical calibration** | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | — | ✅ | ✅ |
-| **Autonomous multi-step actions** | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | — | — | ✅ |
-| **Direct API / Database integration** | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | — | ✅ | ✅ |
-| **Public / Untrusted user inputs** | — | ❌ | ❌ | ❌ | ❌ | ✅ | — | — | ✅ |
-| **CI/CD Regression & Quality Gates** | — | — | — | — | — | — | ✅ | — | — |
-| **Unstructured text context (Tickets/Chat)** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | — | ✅ | ✅ |
-| **Multi-agent departmental debate** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | — | ❌ | ✅ |
-| **Human-in-the-Loop (HITL) safety gate** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | — | ❌ | ✅ |
-| **Operational side-effects dispatching** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | — | ❌ | ✅ |
+| Requirement | 01. ML | 02. LLM | 03. Hybrid | 04. Agent | 05. Structured | 06. Guarded | 07. Evals | 08. RAG | 09. LangGraph | 10. Platform |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **High-throughput bulk scoring** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | — | — | — | ✅ |
+| **Human-readable explanation** | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | — | ✅ | ✅ | ✅ |
+| **Strict statistical calibration** | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | — | ✅ | ✅ | ✅ |
+| **Autonomous multi-step actions** | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ | — | — | ✅ | ✅ |
+| **Direct API / Database integration** | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | — | ✅ | ✅ | ✅ |
+| **Public / Untrusted user inputs** | — | ❌ | ❌ | ❌ | ❌ | ✅ | — | — | ✅ | ✅ |
+| **CI/CD Regression & Quality Gates** | — | — | — | — | — | — | ✅ | — | — | ✅ |
+| **Unstructured text context (Tickets/Chat)** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | — | ✅ | ✅ | ✅ |
+| **Multi-agent departmental debate** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | — | ❌ | ✅ | ✅ |
+| **Human-in-the-Loop (HITL) safety gate** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | — | ❌ | ✅ | ✅ |
+| **Operational side-effects dispatching** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | — | ❌ | ✅ | ✅ |
+| **Interactive Web UI & In-Browser Settings**| ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 ---
 
 ## Quick Start
@@ -165,6 +168,16 @@ pip install -r requirements.txt
 cp .env.example .env  # configure your provider & API key (supports Z.ai, OpenAI, Gemini, Claude)
 python src/train.py
 python src/main.py --id "Store Critical"
+
+# 10. Unified Full-Stack Platform (Flask + React)
+cd ../10-churn-platform/backend
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python app.py  # Backend running on http://127.0.0.1:5001
+
+# In a second terminal (Frontend):
+cd ../frontend
+pnpm install && pnpm dev  # Web Dashboard running on http://localhost:3000
 ```
 
 ---

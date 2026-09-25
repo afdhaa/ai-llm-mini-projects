@@ -1,6 +1,6 @@
 # Architecture Overview
 
-This repository demonstrates nine progressive architectures solving the same domain problem: **Customer Churn Prediction and Retention Strategy**.
+This repository demonstrates ten progressive architectures solving the same domain problem: **Customer Churn Prediction and Retention Strategy**.
 
 ```text
 Phase 1: Foundations to Autonomous Exploration (Tiers 01 - 04)
@@ -17,12 +17,11 @@ Phase 2: Production Hardening, Quality & RAG (Tiers 05 - 08)       ▼
 │ Structured  │     │  Sandboxing │     │  Judge SUT  │     │ Support RAG │
 └─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
                                                                    │
-Phase 3: Multi-Agent Collaboration & Action Execution (Tier 09)    ▼
-                                                            ┌─────────────┐
-                                                            │09. LangGraph│
-                                                            │ StateGraph  │
-                                                            │ HITL Gates  │
-                                                            └─────────────┘
+Phase 3: Multi-Agent Collaboration & Unified Platform (Tiers 09 - 10) ▼
+┌────────────────────────────────────────┐ ┌───────────────────────────┐
+│ 09. LangGraph State Machine & HITL     │─▶│ 10. Unified Web Platform  │
+│ Multi-Agent Deliberation & Safe Actions│ │ Flask REST API + React UI │
+└────────────────────────────────────────┘ └───────────────────────────┘
 ```
 
 ---
@@ -352,16 +351,44 @@ Target Account: "Store Critical"
 
 ---
 
+## Tier 10: Unified Full-Stack Platform (`10-churn-platform`)
+
+An enterprise web application unifying Tiers 01 through 09 into an interactive workspace powered by a Flask REST API backend and a React 18 frontend with dynamic in-browser model configuration.
+
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│ REACT 18 WEB DASHBOARD (9 Dedicated Menus & Dynamic Model Settings)    │
+│ • Sidebar Navigation: Tiers 01 through 09                              │
+│ • In-UI Model Switcher (Z.ai, OpenAI, Gemini, Claude, Ollama)          │
+│ • Interactive HITL Approval Bar (Approve, Selective, Steer, Reject)   │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │ HTTP REST + x-ai-* Headers
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ FLASK BACKEND REST API (Modular Pipeline Adapter)                      │
+│ • Dynamic LLM Factory per-request (Zero server-side .env lock-in)      │
+│ • Microservice Endpoints for all 9 tiers (/api/tier01 - /api/tier09)   │
+│ • Server-Sent Events (SSE) streaming for multi-agent deliberation      │
+│ • Audit Log Persistence (data/execution_audit.json)                    │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+- **Characteristics**: Full-stack web accessibility; in-browser client-side model credentialing; 9 dedicated interactive workspaces; real-time HITL console and action dispatcher.
+- **Tech Stack**: React 18, Vite, Tailwind CSS, Lucide Icons, Flask 3.1, Flask-CORS, LangGraph, Scikit-Learn.
+- **Artifacts**: Production build assets (`frontend/dist/`), Flask API endpoints, persistent audit logs (`data/execution_audit.json`).
+
+---
+
 ## Architecture Comparison Matrix
 
-| Dimension | 01 - Churn ML | 02 - Churn LLM | 03 - Churn ML + LLM | 04 - Churn LangChain | 05 - Structured Output | 06 - Guarded Agent | 07 - Automated Evals | 08 - Contextual RAG | 09 - LangGraph HITL |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Paradigm** | Traditional ML | Foundation LLM | Hybrid (ML + LLM) | Agentic AI | Schema-Enforced AI | Guarded Enterprise AI | AI Quality Assurance | Context-Aware Hybrid AI | Multi-Agent State Machine & HITL |
-| **Primary Audience** | Data Pipelines | Human Analyst | Operations Team | Human Analyst (Chat) | Backend / API Services | Public / Enterprise APIs | Engineering Teams / CI/CD | Operations / Account Execs | Enterprise Ops & Cross-Dept Squads |
-| **Input Format** | CSV Records | Target Account | Target Account | Open-ended Query | Target Data (Batch/Single) | Free Query (Protected) | Golden Test Dataset | Tabular Data + Tickets | Tabular + Tickets + Financials |
-| **Injection Defense** | N/A | None | None | None | Basic (Schema Bound) | Active 3-Layer Guardrail | Automated Injection Test | Schema Contract Bound | Schema Bound + Human Gate |
-| **Output Type** | Numeric float | Free-Text | Free-Text | Free-Text | Validated Pydantic / JSON | Validated Pydantic / JSON | Audit Matrix & Report JSON | Validated Pydantic Report | Dispatched Actions + Audit Log |
-| **Evaluation Method** | ROC-AUC / Accuracy | None | None | None | Pydantic Validation | Pydantic Validation | Rules + LLM-as-a-Judge | Schema Validation + Root Cause | Multi-Agent Deliberation + Human Sign-off |
-| **Control Flow** | Static Sequential | Static Sequential | Static Sequential | Dynamic Loop | Static Sequential | Guarded Dynamic Loop | Automated Test Harness | Hybrid Multi-Modal Sequential | LangGraph Cyclic/StateGraph with Checkpoint Interrupt |
-| **Tool Execution** | None | None | None | Dynamic (4 Tools) | None (Schema Binding) | Sandboxed (4 Tools) | Sandboxed Pipeline (SUT) | Semantic Retriever + ML | Production Action Dispatchers (Banking, Jira, CRM) |
-| **Token Usage** | None | Single (~300) | Single (~270) | Cumulative (~4.8k) | Single (~900 - 1.7k) | Cumulative (~4k - 5k) | Benchmarked per Test Case | Single (~800 - 1.5k) | Cumulative Across Agents (~12k - 14k) |
+| Dimension | 01 - Churn ML | 02 - Churn LLM | 03 - Churn ML + LLM | 04 - Churn LangChain | 05 - Structured Output | 06 - Guarded Agent | 07 - Automated Evals | 08 - Contextual RAG | 09 - LangGraph HITL | 10 - Unified Platform |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Paradigm** | Traditional ML | Foundation LLM | Hybrid (ML + LLM) | Agentic AI | Schema-Enforced AI | Guarded Enterprise AI | AI Quality Assurance | Context-Aware Hybrid AI | Multi-Agent State Machine & HITL | Full-Stack AI Platform |
+| **Primary Audience** | Data Pipelines | Human Analyst | Operations Team | Human Analyst (Chat) | Backend / API Services | Public / Enterprise APIs | Engineering Teams / CI/CD | Operations / Account Execs | Enterprise Ops & Cross-Dept Squads | Enterprise Users & Developers |
+| **Input Format** | CSV Records | Target Account | Target Account | Open-ended Query | Target Data (Batch/Single) | Free Query (Protected) | Golden Test Dataset | Tabular Data + Tickets | Tabular + Tickets + Financials | Interactive Web UI & REST API |
+| **Injection Defense** | N/A | None | None | None | Basic (Schema Bound) | Active 3-Layer Guardrail | Automated Injection Test | Schema Contract Bound | Schema Bound + Human Gate | 3-Layer Perimeter + Client Auth |
+| **Output Type** | Numeric float | Free-Text | Free-Text | Free-Text | Validated Pydantic / JSON | Validated Pydantic / JSON | Audit Matrix & Report JSON | Validated Pydantic Report | Dispatched Actions + Audit Log | Interactive Web Views + JSON API |
+| **Evaluation Method** | ROC-AUC / Accuracy | None | None | None | Pydantic Validation | Pydantic Validation | Rules + LLM-as-a-Judge | Schema Validation + Root Cause | Multi-Agent Deliberation + Human Sign-off | Unified Cross-Tier Web Testing |
+| **Control Flow** | Static Sequential | Static Sequential | Static Sequential | Dynamic Loop | Static Sequential | Guarded Dynamic Loop | Automated Test Harness | Hybrid Multi-Modal Sequential | LangGraph Cyclic StateGraph | Event-Driven Full-Stack Web Flow |
+| **Tool Execution** | None | None | None | Dynamic (4 Tools) | None (Schema Binding) | Sandboxed (4 Tools) | Sandboxed Pipeline (SUT) | Semantic Retriever + ML | Production Action Dispatchers | Unified Dispatch (Banking, Jira, CRM) |
+| **Token Usage** | None | Single (~300) | Single (~270) | Cumulative (~4.8k) | Single (~900 - 1.7k) | Cumulative (~4k - 5k) | Benchmarked per Test Case | Single (~800 - 1.5k) | Cumulative Across Agents (~12k - 14k) | Configurable In-UI per Model |

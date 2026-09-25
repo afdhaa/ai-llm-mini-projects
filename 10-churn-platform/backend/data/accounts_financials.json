@@ -1,0 +1,57 @@
+{
+  "Store Safe": {
+    "customer": "Store Safe",
+    "customer_tier": "ENTERPRISE",
+    "monthly_gmv_idr": 280000000,
+    "platform_fee_rate": 0.02,
+    "monthly_revenue_idr": 5600000,
+    "pending_payout_idr": 0,
+    "max_retention_budget_idr": 10000000,
+    "contract_renewal_days": 120,
+    "margin_percentage": 0.75
+  },
+  "Store Stable": {
+    "customer": "Store Stable",
+    "customer_tier": "GROWTH",
+    "monthly_gmv_idr": 120000000,
+    "platform_fee_rate": 0.02,
+    "monthly_revenue_idr": 2400000,
+    "pending_payout_idr": 0,
+    "max_retention_budget_idr": 4000000,
+    "contract_renewal_days": 60,
+    "margin_percentage": 0.65
+  },
+  "Store Watchlist": {
+    "customer": "Store Watchlist",
+    "customer_tier": "GROWTH",
+    "monthly_gmv_idr": 95000000,
+    "platform_fee_rate": 0.022,
+    "monthly_revenue_idr": 2090000,
+    "pending_payout_idr": 0,
+    "max_retention_budget_idr": 3500000,
+    "contract_renewal_days": 15,
+    "margin_percentage": 0.60
+  },
+  "Store Critical": {
+    "customer": "Store Critical",
+    "customer_tier": "ENTERPRISE",
+    "monthly_gmv_idr": 320000000,
+    "platform_fee_rate": 0.02,
+    "monthly_revenue_idr": 6400000,
+    "pending_payout_idr": 45000000,
+    "max_retention_budget_idr": 12000000,
+    "contract_renewal_days": 5,
+    "margin_percentage": 0.70
+  },
+  "Store Inactive": {
+    "customer": "Store Inactive",
+    "customer_tier": "MICRO",
+    "monthly_gmv_idr": 5000000,
+    "platform_fee_rate": 0.02,
+    "monthly_revenue_idr": 100000,
+    "pending_payout_idr": 0,
+    "max_retention_budget_idr": 250000,
+    "contract_renewal_days": 0,
+    "margin_percentage": 0.50
+  }
+}

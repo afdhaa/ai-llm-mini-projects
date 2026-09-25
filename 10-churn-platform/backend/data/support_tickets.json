@@ -1,0 +1,112 @@
+[
+  {
+    "ticket_id": "TCK-1001",
+    "customer": "Store Safe",
+    "timestamp": "2026-09-10 09:30:00",
+    "channel": "Email",
+    "subject": "Faktur Pajak & Konsolidasi Invoice Bulanan",
+    "message": "Halo tim finance, mohon bantuannya untuk mengirimkan rekap e-faktur pajak masa Agustus kemarin ke email accounting kami. Transaksi bulan ini lancar dan kami berencana tambah 2 outlet baru.",
+    "category": "Billing / Administration",
+    "status": "RESOLVED"
+  },
+  {
+    "ticket_id": "TCK-1002",
+    "customer": "Store Safe",
+    "timestamp": "2026-09-18 14:15:00",
+    "channel": "WhatsApp",
+    "subject": "Penambahan Role Akun Kasir",
+    "message": "Siang min, mau tanya cara tambah 5 akun sub-kasir di dashboard POS bagaimana ya? Fitur dashboard saat ini sangat membantu tim cabang kami.",
+    "category": "Product Feature Inquiry",
+    "status": "RESOLVED"
+  },
+  {
+    "ticket_id": "TCK-1011",
+    "customer": "Store Stable",
+    "timestamp": "2026-09-05 11:20:00",
+    "channel": "WhatsApp",
+    "subject": "Promo Subsidi Ongkir Campaign 10.10",
+    "message": "Halo account success, apakah ada kuota subsidi ongkir tambahan untuk event 10.10 nanti? Toko kami berencana boost promo bundle produk baru.",
+    "category": "Promotion & Campaign",
+    "status": "RESOLVED"
+  },
+  {
+    "ticket_id": "TCK-1012",
+    "customer": "Store Stable",
+    "timestamp": "2026-09-16 16:45:00",
+    "channel": "Email",
+    "subject": "Integrasi Jasa Pengiriman Sameday",
+    "message": "Sore tim support, kami ingin mengaktifkan opsi kurir instant dan sameday khusus wilayah Jabodetabek. Mohon panduan aktivasi di dashboard pengiriman.",
+    "category": "Logistics & Shipping",
+    "status": "OPEN"
+  },
+  {
+    "ticket_id": "TCK-1021",
+    "customer": "Store Watchlist",
+    "timestamp": "2026-09-08 10:10:00",
+    "channel": "WhatsApp",
+    "subject": "Komplain Kenaikan Biaya Platform Fee / Komisi",
+    "message": "Pagi, kami keberatan dengan kenaikan platform fee dari 1.5% menjadi 2.2% per transaksi sejak bulan lalu. Margin produk kami sangat tipis. Platform kompetitor menawarkan MDR 1.2% untuk volume GMV kami.",
+    "category": "Pricing & Commercial",
+    "status": "ESCALATED"
+  },
+  {
+    "ticket_id": "TCK-1022",
+    "customer": "Store Watchlist",
+    "timestamp": "2026-09-15 13:00:00",
+    "channel": "Email",
+    "subject": "Permintaan Negosiasi Ulang Kontrak Merchant",
+    "message": "Kami meminta peninjauan ulang struktur biaya transaksi kami sebelum perpanjangan kuartal depan. Jika biaya komisi tidak ada penyesuaian tier volume, management kami memutuskan migrasi ke payment gateway lain.",
+    "category": "Pricing & Commercial",
+    "status": "PENDING_MERCHANT"
+  },
+  {
+    "ticket_id": "TCK-1031",
+    "customer": "Store Critical",
+    "timestamp": "2026-09-01 20:45:00",
+    "channel": "Zendesk",
+    "subject": "CRITICAL: Webhook 504 Gateway Timeout saat Flash Sale",
+    "message": "URGENT ISSUE! Webhook payment callback terus-menerus 504 timeout selama 3 jam malam ini. Lebih dari 120 pesanan pelanggan kami statusnya gantung, uang pembeli terdebit tapi status di sistem kami tetap unpaid. Pembeli komplain keras di medsos toko!",
+    "category": "Technical Bug / Integration",
+    "status": "CLOSED_WITHOUT_RESOLUTION"
+  },
+  {
+    "ticket_id": "TCK-1032",
+    "customer": "Store Critical",
+    "timestamp": "2026-09-05 09:15:00",
+    "channel": "WhatsApp",
+    "subject": "Payout Settlement Tertahan Belum Masuk Rekening",
+    "message": "Dana pencairan payout senilai Rp 45.000.000 dari tanggal 1-4 September belum masuk ke rekening BCA PT kami sampai hari ini. CS telepon cuma disuruh tunggu 1x24 jam berulang-ulang tanpa kejelasan. Arus kas kami sangat terganggu untuk bayar supplier!",
+    "category": "Finance / Payout Delay",
+    "status": "PENDING_INTERNAL"
+  },
+  {
+    "ticket_id": "TCK-1033",
+    "customer": "Store Critical",
+    "timestamp": "2026-09-12 11:30:00",
+    "channel": "WhatsApp",
+    "subject": "Hold Transaksi Platform - Transaksi dialihkan manual",
+    "message": "Karena masalah webhook belum tuntas dan payout telat terus, management memutuskan mematikan checkout via platform dan mengarahkan customer kami transfer manual ke rekening toko. Kecewa sekali dengan stabilitas sistem.",
+    "category": "Operational Friction",
+    "status": "ESCALATED_MANAGEMENT"
+  },
+  {
+    "ticket_id": "TCK-1041",
+    "customer": "Store Inactive",
+    "timestamp": "2026-08-25 15:00:00",
+    "channel": "Email",
+    "subject": "Pemberitahuan Penutupan Operasional Bisnis Toko",
+    "message": "Dengan hormat, kami menginformasikan bahwa Store Inactive resmi menghentikan seluruh kegiatan operasional usaha ritel per 31 Agustus karena restrukturisasi dan likuidasi perusahaan pusat.",
+    "category": "Account Lifecycle",
+    "status": "RESOLVED"
+  },
+  {
+    "ticket_id": "TCK-1042",
+    "customer": "Store Inactive",
+    "timestamp": "2026-09-02 10:00:00",
+    "channel": "Email",
+    "subject": "Permohonan Penutupan Akun Merchant & Penarikan Saldo Deposit",
+    "message": "Melanjutkan penutupan operasional, mohon bantuan tim merchant operations untuk memproses penutupan akun secara permanen dan mencairkan sisa saldo deposit jaminan ke rekening terdaftar.",
+    "category": "Account Lifecycle",
+    "status": "RESOLVED"
+  }
+]

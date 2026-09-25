@@ -1,0 +1,451 @@
+import React, { useState, useEffect } from "react";
+import { churnApi } from "../services/api";
+import { useSettings } from "../context/SettingsContext";
+import {
+  Workflow,
+  Play,
+  Check,
+  X,
+  Send,
+  AlertCircle,
+  FileCheck2,
+  History,
+} from "lucide-react";
+
+export default function Menu09_LangGraphHITL({ activeCustomer }) {
+  const { getHeaders } = useSettings();
+  const [loading, setLoading] = useState(false);
+  const [pipelineState, setPipelineState] = useState(null);
+  const [sessionId, setSessionId] = useState(null);
+  const [activeTab, setActiveTab] = useState("console"); // console | audit
+
+  // HITL Interactive Controls State
+  const [hitlAction, setHitlAction] = useState(null); // approve_all | selective | steer | reject
+  const [selectedActionIndices, setSelectedActionIndices] = useState([]);
+  const [steeringText, setSteeringText] = useState("");
+  const [executingDecision, setExecutingDecision] = useState(false);
+  const [auditLogs, setAuditLogs] = useState([]);
+
+  useEffect(() => {
+    if (activeTab === "audit") {
+      churnApi.getAuditTier09(getHeaders()).then((res) => {
+        if (res.logs) setAuditLogs(res.logs);
+      });
+    }
+  }, [activeTab]);
+
+  const handleStartEvaluation = async () => {
+    setLoading(true);
+    setPipelineState(null);
+    setHitlAction(null);
+    setSelectedActionIndices([]);
+    setSteeringText("");
+
+    const sId = `session-${activeCustomer.replace(/\s+/g, "-").toLowerCase()}-${Date.now()}`;
+    setSessionId(sId);
+
+    try {
+      const res = await churnApi.evaluateTier09(
+        { customer: activeCustomer, session_id: sId },
+        getHeaders()
+      );
+      setPipelineState(res.state);
+
+      if (res.state?.proposal?.action_items) {
+        setSelectedActionIndices(res.state.proposal.action_items.map((_, i) => i));
+      }
+    } catch (e) {
+      alert("LangGraph evaluation failed: " + e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const submitDecision = async (decision, extraPayload = {}) => {
+    setExecutingDecision(true);
+    try {
+      const payload = {
+        session_id: sessionId,
+        decision,
+        ...extraPayload,
+      };
+
+      const res = await churnApi.actionTier09(payload, getHeaders());
+
+      if (decision === "steer") {
+        setPipelineState((prev) => ({
+          ...prev,
+          proposal: res.proposal,
+          human_feedback: payload.feedback,
+        }));
+        setHitlAction(null);
+        alert("Proposal revised by Supervisor Agent based on operator instructions.");
+      } else {
+        setPipelineState((prev) => ({
+          ...prev,
+          hitl_status: res.hitl_status,
+          execution_logs: res.execution_logs,
+        }));
+        setHitlAction(null);
+      }
+    } catch (e) {
+      alert("Decision execution failed: " + e.message);
+    } finally {
+      setExecutingDecision(false);
+    }
+  };
+
+  const prop = pipelineState?.proposal;
+  const diag = pipelineState?.diagnostic_findings;
+  const fin = pipelineState?.financial_assessment;
+  const isPendingReview = pipelineState?.hitl_status === "PENDING_REVIEW";
+
+  return (
+    <div className="space-y-6 max-w-5xl">
+      {/* Header section */}
+      <div className="border-b border-neutral-800 pb-5">
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-base font-semibold text-neutral-100 tracking-tight">
+              09. Multi-Agent State Machine & HITL Gate (LangGraph)
+            </h1>
+            <p className="text-xs text-neutral-400 mt-1 max-w-xl leading-relaxed">
+              Coordinates specialized departmental agents (Diagnostics, Finance, and Supervisor) using a cyclic LangGraph state machine. High-impact operational side-effects pause at an interactive human approval gate.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="flex rounded-md bg-[#121416] p-1 border border-neutral-800 text-xs">
+              <button
+                onClick={() => setActiveTab("console")}
+                className={`px-3 py-1 rounded transition text-xs font-medium ${
+                  activeTab === "console" ? "bg-neutral-800 text-white" : "text-neutral-400 hover:text-neutral-200"
+                }`}
+              >
+                Deliberation Console
+              </button>
+              <button
+                onClick={() => setActiveTab("audit")}
+                className={`px-3 py-1 rounded transition text-xs font-medium ${
+                  activeTab === "audit" ? "bg-neutral-800 text-white" : "text-neutral-400 hover:text-neutral-200"
+                }`}
+              >
+                Execution Audit Log
+              </button>
+            </div>
+
+            {activeTab === "console" && (
+              <button
+                onClick={handleStartEvaluation}
+                disabled={loading}
+                className="flex items-center gap-2 rounded-md bg-neutral-100 hover:bg-white text-neutral-950 px-3.5 py-1.5 text-xs font-semibold transition active:scale-[0.99] disabled:opacity-50 shadow-sm"
+              >
+                <Play className="h-3.5 w-3.5 fill-current" />
+                {loading ? "Deliberating..." : `Evaluate ${activeCustomer}`}
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {activeTab === "console" && pipelineState && (
+        <div className="space-y-6">
+          {/* 3 Specialist Reports */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* 1. Diagnostics */}
+            <div className="p-4 rounded-lg border border-neutral-800 bg-[#121416] space-y-2">
+              <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-neutral-500 block pb-1 border-b border-neutral-800">
+                1. Technical Diagnostics
+              </span>
+              {diag ? (
+                <div className="text-xs space-y-1.5 font-mono">
+                  <div className="flex justify-between items-center text-neutral-300">
+                    <span className="text-neutral-500">Root Cause:</span>
+                    <strong className="text-neutral-200">{diag.root_cause}</strong>
+                  </div>
+                  <div className="flex justify-between items-center text-neutral-300">
+                    <span className="text-neutral-500">Severity:</span>
+                    <span className="px-1.5 py-0.2 rounded bg-neutral-800 text-neutral-300 font-semibold">{diag.technical_severity}</span>
+                  </div>
+                  <p className="text-[11px] text-neutral-300 bg-[#0c0d0e] p-2.5 rounded border border-neutral-800 font-sans leading-relaxed line-clamp-3">
+                    {diag.key_blocker}
+                  </p>
+                </div>
+              ) : (
+                <p className="text-xs text-neutral-500">Diagnosing...</p>
+              )}
+            </div>
+
+            {/* 2. Finance */}
+            <div className="p-4 rounded-lg border border-neutral-800 bg-[#121416] space-y-2">
+              <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-neutral-500 block pb-1 border-b border-neutral-800">
+                2. Commercial Assessment
+              </span>
+              {fin ? (
+                <div className="text-xs space-y-1.5 font-mono">
+                  <div className="flex justify-between items-center text-neutral-300">
+                    <span className="text-neutral-500">Tier:</span>
+                    <span className="text-neutral-200">{fin.customer_tier}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-neutral-300">
+                    <span className="text-neutral-500">Exposure:</span>
+                    <span className="text-neutral-200">{fin.financial_risk_verdict}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-neutral-300">
+                    <span className="text-neutral-500">Budget Cap:</span>
+                    <span className="text-neutral-200">Rp {fin.approved_budget_cap_idr?.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-neutral-300">
+                    <span className="text-neutral-500">Held Payout:</span>
+                    <span className="text-neutral-200 font-semibold">Rp {fin.pending_payout_idr?.toLocaleString()}</span>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-xs text-neutral-500">Calculating exposure...</p>
+              )}
+            </div>
+
+            {/* 3. Safety Checkpoint */}
+            <div className="p-4 rounded-lg border border-neutral-800 bg-[#121416] space-y-2">
+              <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-neutral-500 block pb-1 border-b border-neutral-800">
+                3. Safety Gate Status
+              </span>
+              <div className="text-xs space-y-1.5 font-mono">
+                <div className="flex justify-between items-center text-neutral-300">
+                  <span className="text-neutral-500">Status:</span>
+                  <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${
+                    isPendingReview ? "bg-amber-950/40 text-amber-400 border border-amber-800/60" : "bg-emerald-950/40 text-emerald-400 border border-emerald-800/60"
+                  }`}>
+                    {pipelineState.hitl_status}
+                  </span>
+                </div>
+                <p className="text-[11px] text-neutral-400 font-sans pt-1 leading-relaxed">
+                  {prop?.requires_hitl
+                    ? prop.hitl_reason
+                    : "Low risk / Standard cost -> Safe for Auto-Approval"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Supervisor Proposal */}
+          {prop && (
+            <div className="rounded-lg border border-neutral-800 bg-[#121416] p-5 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+                <div>
+                  <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-400">
+                    Supervisor Negotiated Strategy
+                  </h3>
+                  <p className="text-xs text-neutral-300 mt-1">{prop.summary}</p>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] text-neutral-500 font-mono uppercase block">Total Financial Impact:</span>
+                  <span className="text-lg font-mono font-semibold text-neutral-100 tabular-nums">
+                    Rp {prop.total_proposed_cost_idr?.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+
+              {/* Action items table */}
+              <div className="space-y-2">
+                <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-400 block">
+                  Action Directives ({prop.action_items?.length || 0}):
+                </span>
+                {prop.action_items?.map((item, idx) => {
+                  const isSelected = selectedActionIndices.includes(idx);
+                  return (
+                    <div
+                      key={idx}
+                      className={`p-3 rounded-lg border transition flex items-start gap-3 text-xs ${
+                        isSelected
+                          ? "bg-[#0c0d0e] border-neutral-800"
+                          : "bg-[#0c0d0e]/40 border-neutral-900 opacity-60"
+                      }`}
+                    >
+                      {hitlAction === "selective" && (
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedActionIndices([...selectedActionIndices, idx]);
+                            } else {
+                              setSelectedActionIndices(selectedActionIndices.filter((i) => i !== idx));
+                            }
+                          }}
+                          className="mt-1 h-3.5 w-3.5 rounded border-neutral-700 bg-neutral-900 accent-neutral-300"
+                        />
+                      )}
+                      <div className="flex-1 space-y-0.5 font-mono">
+                        <div className="flex justify-between items-center">
+                          <span className="font-semibold text-neutral-200">
+                            [{idx + 1}] [{item.action_type}] {item.title}
+                          </span>
+                          {item.cost_idr > 0 && (
+                            <span className="text-neutral-400 tabular-nums font-semibold">
+                              Rp {item.cost_idr.toLocaleString()}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-neutral-400 font-sans">{item.description}</p>
+                        <span className="text-[10px] text-neutral-500 block">Owner: {item.owner_role}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Human-in-the-Loop Decision Box */}
+              {isPendingReview && (
+                <div className="rounded-lg border border-neutral-700/80 bg-[#141618] p-4 mt-5 space-y-3">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-200">
+                    <AlertCircle className="h-3.5 w-3.5 text-amber-400" />
+                    Human Authorization Required Before Dispatch
+                  </div>
+
+                  {!hitlAction ? (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                      <button
+                        onClick={() => submitDecision("approve_all")}
+                        disabled={executingDecision}
+                        className="rounded-md bg-neutral-100 hover:bg-white text-neutral-950 py-2 px-3 text-xs font-semibold transition active:scale-[0.99] flex items-center justify-center gap-1.5 shadow-sm"
+                      >
+                        <Check className="h-3.5 w-3.5" />
+                        Approve All
+                      </button>
+
+                      <button
+                        onClick={() => setHitlAction("selective")}
+                        disabled={executingDecision}
+                        className="rounded-md border border-neutral-700 bg-neutral-800/80 hover:bg-neutral-700 py-2 px-3 text-xs font-medium text-neutral-200 transition"
+                      >
+                        Item-by-Item Review
+                      </button>
+
+                      <button
+                        onClick={() => setHitlAction("steer")}
+                        disabled={executingDecision}
+                        className="rounded-md border border-neutral-700 bg-neutral-800/80 hover:bg-neutral-700 py-2 px-3 text-xs font-medium text-neutral-200 transition"
+                      >
+                        Steer / Revise Plan
+                      </button>
+
+                      <button
+                        onClick={() => submitDecision("reject")}
+                        disabled={executingDecision}
+                        className="rounded-md border border-red-900/60 bg-red-950/20 hover:bg-red-950/40 text-red-300 py-2 px-3 text-xs font-medium transition flex items-center justify-center gap-1.5"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                        Reject All
+                      </button>
+                    </div>
+                  ) : hitlAction === "selective" ? (
+                    <div className="space-y-2.5 pt-1">
+                      <p className="text-xs text-neutral-300 font-mono">
+                        Select individual actions to dispatch ({selectedActionIndices.length} selected):
+                      </p>
+                      <div className="flex gap-2.5">
+                        <button
+                          onClick={() => submitDecision("selective", { approved_indices: selectedActionIndices })}
+                          disabled={executingDecision}
+                          className="rounded-md bg-neutral-100 hover:bg-white text-neutral-950 px-3.5 py-1.5 text-xs font-semibold transition"
+                        >
+                          Confirm Dispatch ({selectedActionIndices.length} actions)
+                        </button>
+                        <button
+                          onClick={() => setHitlAction(null)}
+                          className="rounded-md border border-neutral-700 bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-300"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : hitlAction === "steer" ? (
+                    <div className="space-y-2.5 pt-1">
+                      <label className="text-xs text-neutral-300 block">
+                        Enter guidance for the Supervisor Agent to adjust the proposal:
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={steeringText}
+                          onChange={(e) => setSteeringText(e.target.value)}
+                          placeholder="e.g. Batalkan fee waiver, cukup unfreeze payout dan eskalasi P1 DevOps..."
+                          className="flex-1 rounded-md border border-neutral-700 bg-[#0c0d0e] px-3 py-1.5 text-xs text-neutral-200 focus:border-neutral-500 focus:outline-none"
+                        />
+                        <button
+                          onClick={() => submitDecision("steer", { feedback: steeringText })}
+                          disabled={executingDecision || !steeringText.trim()}
+                          className="rounded-md bg-neutral-100 hover:bg-white text-neutral-950 px-3.5 py-1.5 text-xs font-semibold transition flex items-center gap-1.5"
+                        >
+                          <Send className="h-3 w-3" />
+                          Re-Synthesize
+                        </button>
+                        <button
+                          onClick={() => setHitlAction(null)}
+                          className="rounded-md border border-neutral-700 bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-300"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Execution Log Table */}
+          {pipelineState.execution_logs && pipelineState.execution_logs.length > 0 && (
+            <div className="rounded-lg border border-neutral-800 bg-[#121416] p-4 space-y-2.5">
+              <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-400 block border-b border-neutral-800 pb-2">
+                Operational Side-Effects Dispatched ({pipelineState.execution_logs.length})
+              </span>
+              <div className="space-y-1.5 font-mono text-xs">
+                {pipelineState.execution_logs.map((log, i) => (
+                  <div key={i} className="p-2.5 rounded bg-[#0c0d0e] border border-neutral-800/80 space-y-1">
+                    <div className="flex justify-between items-center">
+                      <span className="text-neutral-200 font-medium">
+                        [{log.status}] [{log.action_type}] ──▶ {log.target_system}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-neutral-400 font-sans">{log.message}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Audit Trail Tab */}
+      {activeTab === "audit" && (
+        <div className="rounded-lg border border-neutral-800 bg-[#121416] p-4 space-y-3">
+          <div className="flex items-center justify-between pb-2 border-b border-neutral-800">
+            <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-400">
+              Audit Trail Records (data/execution_audit.json)
+            </span>
+            <span className="text-xs font-mono text-neutral-500">{auditLogs.length} entries</span>
+          </div>
+
+          {auditLogs.length > 0 ? (
+            <div className="space-y-2">
+              {auditLogs.map((log, idx) => (
+                <div key={idx} className="p-3 rounded bg-[#0c0d0e] border border-neutral-800 text-xs space-y-1 font-mono">
+                  <span className="text-neutral-200 font-medium">
+                    [{log.status}] [{log.action_type}] ──▶ {log.target_system}
+                  </span>
+                  <p className="text-neutral-400 font-sans text-[11px]">{log.message}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-neutral-500 py-6 text-center font-mono">
+              No audit logs recorded yet. Authorize actions in Menu 09 to record entries.
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
