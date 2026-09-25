@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { churnApi } from "../services/api";
 import { useSettings } from "../context/SettingsContext";
 import { Play, Clock, FileText } from "lucide-react";
+import PageStoreHeader from "../components/PageStoreHeader";
+import { useCustomer } from "../context/CustomerContext";
 
-export default function Menu02_PureLLM({ activeCustomer }) {
+export default function Menu02_PureLLM() {
+  const { activeCustomer } = useCustomer();
   const { getHeaders, config } = useSettings();
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -22,6 +25,9 @@ export default function Menu02_PureLLM({ activeCustomer }) {
 
   return (
     <div className="space-y-6 max-w-5xl">
+      {/* In-Page Store Selector & Parameter Header */}
+      <PageStoreHeader showDatasetAction={false} />
+
       {/* Header section */}
       <div className="border-b border-neutral-200 pb-5">
         <div className="flex items-start justify-between">

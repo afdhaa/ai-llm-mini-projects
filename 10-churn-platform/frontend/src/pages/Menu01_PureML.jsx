@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { churnApi } from "../services/api";
 import { Play, Database, Clock } from "lucide-react";
+import PageStoreHeader from "../components/PageStoreHeader";
+import { useCustomer } from "../context/CustomerContext";
 
-export default function Menu01_PureML({ activeCustomer }) {
+export default function Menu01_PureML() {
+  const { targets, activeCustomer } = useCustomer();
   const [transactions, setTransactions] = useState(45);
   const [activeDays, setActiveDays] = useState(5);
   const [inactiveDays, setInactiveDays] = useState(30);
@@ -12,28 +15,13 @@ export default function Menu01_PureML({ activeCustomer }) {
   const [showDataset, setShowDataset] = useState(false);
 
   useEffect(() => {
-    if (activeCustomer === "Store Critical") {
-      setTransactions(45);
-      setActiveDays(5);
-      setInactiveDays(30);
-    } else if (activeCustomer === "Store Watchlist") {
-      setTransactions(300);
-      setActiveDays(18);
-      setInactiveDays(12);
-    } else if (activeCustomer === "Store Safe") {
-      setTransactions(850);
-      setActiveDays(28);
-      setInactiveDays(1);
-    } else if (activeCustomer === "Store Stable") {
-      setTransactions(350);
-      setActiveDays(22);
-      setInactiveDays(8);
-    } else if (activeCustomer === "Store Inactive") {
-      setTransactions(45);
-      setActiveDays(0);
-      setInactiveDays(30);
+    const target = targets.find((t) => t.customer.toLowerCase() === activeCustomer?.toLowerCase());
+    if (target) {
+      setTransactions(target.transactions);
+      setActiveDays(target.active_days);
+      setInactiveDays(target.inactive_days);
     }
-  }, [activeCustomer]);
+  }, [activeCustomer, targets]);
 
   const handlePredict = async () => {
     setLoading(true);
@@ -67,6 +55,9 @@ export default function Menu01_PureML({ activeCustomer }) {
 
   return (
     <div className="space-y-6 max-w-5xl">
+      {/* In-Page Store Selector & Parameter Header */}
+      <PageStoreHeader showDatasetAction={true} />
+
       {/* Header section */}
       <div className="border-b border-neutral-200 pb-5">
         <div className="flex items-start justify-between">

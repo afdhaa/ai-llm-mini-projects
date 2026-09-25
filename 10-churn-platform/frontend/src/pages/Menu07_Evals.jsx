@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { churnApi } from "../services/api";
 import { useSettings } from "../context/SettingsContext";
 import { Scale, Play, ShieldCheck, Check, X } from "lucide-react";
+import PageStoreHeader from "../components/PageStoreHeader";
 
 export default function Menu07_Evals() {
   const { getHeaders } = useSettings();
@@ -32,6 +33,9 @@ export default function Menu07_Evals() {
 
   return (
     <div className="space-y-6 max-w-5xl">
+      {/* In-Page Store Selector & Parameter Header */}
+      <PageStoreHeader showDatasetAction={true} />
+
       {/* Header section */}
       <div className="border-b border-neutral-200 pb-5">
         <div className="flex items-start justify-between">

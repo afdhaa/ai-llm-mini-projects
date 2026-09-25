@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { churnApi } from "../services/api";
 import { useSettings } from "../context/SettingsContext";
 import { Play, Clock, Terminal } from "lucide-react";
-
+import PageStoreHeader from "../components/PageStoreHeader";
+import { useCustomer } from "../context/CustomerContext";
 const PRESET_QUERIES = [
   "Evaluate Store Critical: predict churn probability using the ML model and suggest retention SOP.",
   "What are the target accounts and which one is at highest churn risk?",
   "Calculate churn probability for 50 txs, 2 active days, and 28 inactive days.",
 ];
 
-export default function Menu04_Agent({ activeCustomer }) {
+export default function Menu04_Agent() {
+  const { activeCustomer } = useCustomer();
   const { getHeaders } = useSettings();
   const [query, setQuery] = useState(PRESET_QUERIES[0]);
   const [result, setResult] = useState(null);
@@ -30,6 +32,9 @@ export default function Menu04_Agent({ activeCustomer }) {
 
   return (
     <div className="space-y-6 max-w-5xl">
+      {/* In-Page Store Selector & Parameter Header */}
+      <PageStoreHeader showDatasetAction={false} />
+
       {/* Header section */}
       <div className="border-b border-neutral-200 pb-5">
         <div>

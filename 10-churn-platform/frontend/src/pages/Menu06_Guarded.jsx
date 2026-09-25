@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { churnApi } from "../services/api";
 import { useSettings } from "../context/SettingsContext";
 import { ShieldCheck, ShieldAlert, ShieldX, Play, Lock } from "lucide-react";
+import PageStoreHeader from "../components/PageStoreHeader";
 
 const ATTACK_PRESETS = [
   {
@@ -39,6 +40,9 @@ export default function Menu06_Guarded() {
 
   return (
     <div className="space-y-6 max-w-5xl">
+      {/* In-Page Store Selector & Parameter Header */}
+      <PageStoreHeader showDatasetAction={false} />
+
       {/* Header section */}
       <div className="border-b border-neutral-200 pb-5">
         <div>

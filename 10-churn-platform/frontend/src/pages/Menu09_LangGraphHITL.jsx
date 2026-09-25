@@ -11,10 +11,12 @@ import {
   FileCheck2,
   History,
 } from "lucide-react";
+import PageStoreHeader from "../components/PageStoreHeader";
+import { useCustomer } from "../context/CustomerContext";
 
-export default function Menu09_LangGraphHITL({ activeCustomer }) {
+export default function Menu09_LangGraphHITL() {
+  const { activeCustomer } = useCustomer();
   const { getHeaders } = useSettings();
-  const [loading, setLoading] = useState(false);
   const [pipelineState, setPipelineState] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [activeTab, setActiveTab] = useState("console"); // console | audit
@@ -102,6 +104,9 @@ export default function Menu09_LangGraphHITL({ activeCustomer }) {
 
   return (
     <div className="space-y-6 max-w-5xl">
+      {/* In-Page Store Selector & Parameter Header */}
+      <PageStoreHeader showDatasetAction={false} />
+
       {/* Header section */}
       <div className="border-b border-neutral-200 pb-5">
         <div className="flex items-start justify-between">

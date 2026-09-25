@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { churnApi } from "../services/api";
 import { useSettings } from "../context/SettingsContext";
 import { Play, Clock, Code2 } from "lucide-react";
+import PageStoreHeader from "../components/PageStoreHeader";
+import { useCustomer } from "../context/CustomerContext";
 
-export default function Menu05_Structured({ activeCustomer }) {
+export default function Menu05_Structured() {
+  const { activeCustomer } = useCustomer();
   const { getHeaders } = useSettings();
   const [mode, setMode] = useState("single");
   const [result, setResult] = useState(null);
@@ -26,6 +29,9 @@ export default function Menu05_Structured({ activeCustomer }) {
 
   return (
     <div className="space-y-6 max-w-5xl">
+      {/* In-Page Store Selector & Parameter Header */}
+      <PageStoreHeader showDatasetAction={false} />
+
       {/* Header section */}
       <div className="border-b border-neutral-200 pb-5">
         <div className="flex items-start justify-between">
