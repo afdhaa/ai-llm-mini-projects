@@ -1,3 +1,4 @@
+import ast
 import json
 from pathlib import Path
 from typing import Any
@@ -9,6 +10,43 @@ from llm_factory import get_llm_config_from_request, test_llm_connection
 common_bp = Blueprint("common", __name__)
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 MODELS_DIR = Path(__file__).resolve().parents[1] / "models"
+
+def normalize_llm_content(content: Any) -> str:
+    """Safely extract plain text/markdown from LangChain AIMessage content, lists, or dicts."""
+    if content is None:
+        return ""
+    if isinstance(content, str):
+        trimmed = content.strip()
+        if (trimmed.startswith("[{") and trimmed.endswith("}]")) or (trimmed.startswith("{'") and trimmed.endswith("'}")):
+            try:
+                parsed = ast.literal_eval(trimmed)
+                if isinstance(parsed, list):
+                    parts = [
+                        str(item.get("text", str(item))) if isinstance(item, dict) else str(item)
+                        for item in parsed
+                    ]
+                    if parts:
+                        return "".join(parts)
+                elif isinstance(parsed, dict) and "text" in parsed:
+                    return str(parsed["text"])
+            except Exception:
+                pass
+        return content
+    if isinstance(content, list):
+        parts = []
+        for item in content:
+            if isinstance(item, dict) and "text" in item:
+                parts.append(str(item["text"]))
+            elif hasattr(item, "text"):
+                parts.append(str(getattr(item, "text")))
+            else:
+                parts.append(str(item))
+        return "".join(parts)
+    if isinstance(content, dict):
+        if "text" in content:
+            return str(content["text"])
+        return json.dumps(content, indent=2)
+    return str(content)
 
 
 def load_ml_model():

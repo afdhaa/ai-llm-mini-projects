@@ -1,7 +1,7 @@
 import time
 from flask import Blueprint, jsonify, request
 from llm_factory import get_llm, extract_token_usage
-from routes.common import get_customer_profile
+from routes.common import get_customer_profile, normalize_llm_content
 
 menu03_bp = Blueprint("menu03", __name__)
 
@@ -30,14 +30,28 @@ def generate_hybrid_briefing():
         customer = data.get("customer", "Store Critical")
         profile = get_customer_profile(customer)
 
-        prompt = HYBRID_PROMPT_TEMPLATE.format(
-            customer=profile["customer"],
-            churn_percentage=f"{profile['churn_probability']:.1%}",
-            ml_risk_level=profile["ml_risk_level"],
-            transactions=profile["transactions"],
-            active_days=profile["active_days"],
-            inactive_days=profile["inactive_days"],
-        )
+        custom_prompt = data.get("custom_prompt")
+        if custom_prompt and custom_prompt.strip():
+            try:
+                prompt = custom_prompt.format(
+                    customer=profile["customer"],
+                    churn_percentage=f"{profile['churn_probability']:.1%}",
+                    ml_risk_level=profile["ml_risk_level"],
+                    transactions=profile["transactions"],
+                    active_days=profile["active_days"],
+                    inactive_days=profile["inactive_days"],
+                )
+            except Exception:
+                prompt = custom_prompt
+        else:
+            prompt = HYBRID_PROMPT_TEMPLATE.format(
+                customer=profile["customer"],
+                churn_percentage=f"{profile['churn_probability']:.1%}",
+                ml_risk_level=profile["ml_risk_level"],
+                transactions=profile["transactions"],
+                active_days=profile["active_days"],
+                inactive_days=profile["inactive_days"],
+            )
 
         llm = get_llm(request)
         resp = llm.invoke(prompt)
@@ -54,7 +68,7 @@ def generate_hybrid_briefing():
             "active_days": profile["active_days"],
             "inactive_days": profile["inactive_days"],
             "prompt": prompt,
-            "briefing": str(resp.content),
+            "briefing": normalize_llm_content(resp.content),
             "latency_ms": latency_ms,
             "token_usage": tokens.model_dump(),
         })

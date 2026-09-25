@@ -5,7 +5,7 @@ import pandas as pd
 from flask import Blueprint, jsonify, request
 from langchain_core.tools import tool
 from llm_factory import get_llm, extract_token_usage, TokenUsage
-from routes.common import DATA_DIR, load_ml_model, load_target_customers, load_retention_playbook
+from routes.common import DATA_DIR, load_ml_model, load_target_customers, load_retention_playbook, normalize_llm_content
 
 menu04_bp = Blueprint("menu04", __name__)
 
@@ -112,7 +112,8 @@ def agent_chat():
 
         latency_ms = int((time.time() - t0) * 1000)
 
-        final_answer = str(messages[-1].content) if hasattr(messages[-1], "content") else str(messages[-1])
+        raw_final = messages[-1].content if hasattr(messages[-1], "content") else messages[-1]
+        final_answer = normalize_llm_content(raw_final)
 
         return jsonify({
             "success": True,

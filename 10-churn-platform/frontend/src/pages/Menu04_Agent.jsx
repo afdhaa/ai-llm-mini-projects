@@ -3,6 +3,7 @@ import { churnApi } from "../services/api";
 import { useSettings } from "../context/SettingsContext";
 import { Play, Clock, Terminal } from "lucide-react";
 import PageStoreHeader from "../components/PageStoreHeader";
+import FormattedAIResponse from "../components/FormattedAIResponse";
 import { useCustomer } from "../context/CustomerContext";
 const PRESET_QUERIES = [
   "Evaluate Store Critical: predict churn probability using the ML model and suggest retention SOP.",
@@ -12,7 +13,7 @@ const PRESET_QUERIES = [
 
 export default function Menu04_Agent() {
   const { activeCustomer } = useCustomer();
-  const { getHeaders } = useSettings();
+  const { getHeaders, config } = useSettings();
   const [query, setQuery] = useState(PRESET_QUERIES[0]);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -125,18 +126,13 @@ export default function Menu04_Agent() {
           )}
 
           {/* Final Agent Answer */}
-          <div className="rounded-lg border border-neutral-200 bg-white p-4 space-y-3 shadow-sm">
-            <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-500 block border-b border-neutral-100 pb-2">
-              Agent Synthesis Response
-            </span>
-            <div className="p-3.5 rounded border border-neutral-200 bg-neutral-50 text-xs text-neutral-800 whitespace-pre-wrap leading-relaxed font-sans">
-              {result.final_answer}
-            </div>
-            <div className="flex justify-between text-[11px] font-mono text-neutral-400 pt-1">
-              <span>Tokens: {result.token_usage?.total_tokens || 0} cumulative</span>
-              <span>Tools executed: {result.total_tools_called}</span>
-            </div>
-          </div>
+          <FormattedAIResponse
+            content={result.final_answer}
+            latencyMs={result.latency_ms}
+            tokenUsage={result.token_usage}
+            modelName={config.model}
+            title="Agent Autonomous Synthesis & Execution Summary"
+          />
         </div>
       )}
     </div>

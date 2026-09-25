@@ -1,0 +1,5 @@
+packages:
+  - "10-churn-platform/frontend"
+minimumReleaseAge: 0
+onlyBuiltDependencies:
+  - esbuild

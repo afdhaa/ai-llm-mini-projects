@@ -1,20 +1,39 @@
 import React, { useState } from "react";
 import { churnApi } from "../services/api";
 import { useSettings } from "../context/SettingsContext";
-import { Play, Clock, FileText } from "lucide-react";
+import { Play } from "lucide-react";
 import PageStoreHeader from "../components/PageStoreHeader";
+import PromptEditor from "../components/PromptEditor";
+import FormattedAIResponse from "../components/FormattedAIResponse";
 import { useCustomer } from "../context/CustomerContext";
+
+const DEFAULT_PROMPT = `You are an expert customer retention analyst in an e-commerce platform.
+Evaluate the following merchant's account activity and qualitative churn risk:
+
+CUSTOMER: {customer}
+- Monthly Transactions: {transactions}
+- Active Days (Past 30d): {active_days}
+- Inactive Days: {inactive_days}
+
+Provide a concise, professional assessment containing:
+1. Qualitative Risk Tier (High / Medium / Low / None)
+2. Behavioral Diagnosis (Why are they behaving this way?)
+3. Immediate Retention Recommendation`;
 
 export default function Menu02_PureLLM() {
   const { activeCustomer } = useCustomer();
   const { getHeaders, config } = useSettings();
+  const [prompt, setPrompt] = useState(DEFAULT_PROMPT);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleEvaluate = async () => {
     setLoading(true);
     try {
-      const res = await churnApi.evaluateTier02({ customer: activeCustomer }, getHeaders());
+      const res = await churnApi.evaluateTier02(
+        { customer: activeCustomer, custom_prompt: prompt },
+        getHeaders()
+      );
       setResult(res);
     } catch (e) {
       alert("Evaluation failed: " + e.message);
@@ -36,7 +55,7 @@ export default function Menu02_PureLLM() {
               02. Pure Foundation LLM (Zero-Shot)
             </h1>
             <p className="text-xs text-neutral-500 mt-1 max-w-xl leading-relaxed">
-              Zero-shot qualitative prompting directly over raw customer activity metrics without traditional ML training. Produces readable behavioral narratives, but lacks statistical probability calibration.
+              Zero-shot qualitative prompting directly over raw customer activity metrics. Customize the prompt directive below before generating the evaluation.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -52,48 +71,26 @@ export default function Menu02_PureLLM() {
         </div>
       </div>
 
+      {/* Interactive Prompt Editor */}
+      <PromptEditor
+        value={prompt}
+        onChange={setPrompt}
+        onReset={() => setPrompt(DEFAULT_PROMPT)}
+        variables={["customer", "transactions", "active_days", "inactive_days"]}
+        title="Zero-Shot Prompt Directive (Customizable)"
+        subtitle="You can freely tweak the instructions, add questions, or modify the rubric before executing inference."
+      />
+
+      {/* Result Section */}
       {result && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Prompt Section */}
-          <div className="rounded-lg border border-neutral-200 bg-white p-4 flex flex-col justify-between shadow-sm">
-            <div>
-              <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-100">
-                <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-500">
-                  Constructed Prompt
-                </span>
-                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-600">Zero-Shot</span>
-              </div>
-              <pre className="p-3 rounded border border-neutral-200 bg-neutral-50/70 text-xs font-mono text-neutral-800 whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">
-                {result.prompt}
-              </pre>
-            </div>
-            <div className="text-[11px] text-neutral-400 pt-3 border-t border-neutral-100 font-mono">
-              Raw metrics injected directly into prompt template.
-            </div>
-          </div>
-
-          {/* Model Response */}
-          <div className="rounded-lg border border-neutral-200 bg-white p-4 flex flex-col justify-between shadow-sm">
-            <div>
-              <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-100">
-                <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-500">
-                  LLM Qualitative Output
-                </span>
-                <span className="text-[10px] font-mono text-neutral-500 flex items-center gap-1">
-                  <Clock className="h-3 w-3 text-neutral-400" />
-                  {result.latency_ms}ms
-                </span>
-              </div>
-              <div className="p-3 rounded border border-neutral-200 bg-neutral-50/70 text-xs text-neutral-800 whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto font-sans">
-                {result.response}
-              </div>
-            </div>
-
-            <div className="text-[11px] text-neutral-400 pt-3 border-t border-neutral-100 font-mono flex justify-between">
-              <span>Tokens: {result.token_usage?.total_tokens || 0}</span>
-              <span>Model: {config.model}</span>
-            </div>
-          </div>
+        <div className="space-y-4">
+          <FormattedAIResponse
+            content={result.response}
+            latencyMs={result.latency_ms}
+            tokenUsage={result.token_usage}
+            modelName={config.model}
+            title={`Qualitative Assessment: ${result.customer}`}
+          />
         </div>
       )}
     </div>

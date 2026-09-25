@@ -3,12 +3,32 @@ import { churnApi } from "../services/api";
 import { useSettings } from "../context/SettingsContext";
 import { Play, Layers, MessageSquare, AlertTriangle, CheckCircle2, Ticket } from "lucide-react";
 import PageStoreHeader from "../components/PageStoreHeader";
+import PromptEditor from "../components/PromptEditor";
+
+const DEFAULT_RAG_PROMPT = `You are an Enterprise Retention Director synthesizing quantitative ML scores with qualitative customer support signals.
+
+CUSTOMER: {customer}
+- ML Churn Probability : {churn_percentage} [{risk_level}]
+- Activity Signals      : {transactions} transactions, {active_days} active days, {inactive_days} inactive days
+
+GENERIC PLAYBOOK SOP (Tabular Guidance):
+- Prescribed Generic Incentive: {generic_incentive}
+- Default Generic Actions: {generic_actions}
+
+UNSTRUCTURED SUPPORT TICKETS & WHATSAPP LOGS (RAG Context):
+{tickets_json}
+
+INSTRUCTIONS:
+1. Examine the retrieved support tickets to discover the true underlying problem.
+2. Determine whether the generic SOP (e.g. offering a discount voucher) is adequate or tone-deaf (e.g. if the customer's webhooks or payouts are broken, a discount damages trust).
+3. Return a validated ContextAwareIntervention schema.`;
 import { useCustomer } from "../context/CustomerContext";
 
 export default function Menu08_RAG() {
   const { activeCustomer, setActiveCustomer } = useCustomer();
   const { getHeaders } = useSettings();
   const [result, setResult] = useState(null);
+  const [prompt, setPrompt] = useState(DEFAULT_RAG_PROMPT);
   const [loading, setLoading] = useState(false);
 
   // Portfolio matrix state
@@ -38,7 +58,10 @@ export default function Menu08_RAG() {
   const handleRunRAG = async () => {
     setLoading(true);
     try {
-      const res = await churnApi.ragTier08({ customer: activeCustomer }, getHeaders());
+      const res = await churnApi.ragTier08(
+        { customer: activeCustomer, custom_prompt: prompt },
+        getHeaders()
+      );
       setResult(res);
     } catch (e) {
       alert("RAG evaluation failed: " + e.message);
@@ -75,6 +98,28 @@ export default function Menu08_RAG() {
           )}
         </div>
       </div>
+      {/* Interactive Prompt Directive Editor (Single Store Mode) */}
+      {!isAll && (
+        <PromptEditor
+          value={prompt}
+          onChange={setPrompt}
+          onReset={() => setPrompt(DEFAULT_RAG_PROMPT)}
+          variables={[
+            "customer",
+            "churn_percentage",
+            "risk_level",
+            "transactions",
+            "active_days",
+            "inactive_days",
+            "generic_incentive",
+            "generic_actions",
+            "tickets_json",
+          ]}
+          title="Contextual Support RAG Prompt Directive (Customizable)"
+          subtitle="Tune how the LLM evaluates unstructured support tickets versus generic retention playbook SOPs."
+        />
+      )}
+
 
       {/* ALL STORES: Portfolio Intelligence Comparison Matrix */}
       {isAll ? (

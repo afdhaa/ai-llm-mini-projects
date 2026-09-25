@@ -6,7 +6,7 @@ settings:
 
 importers:
 
-  .:
+  10-churn-platform/frontend:
     dependencies:
       '@base-ui/react':
         specifier: ^1.8.0

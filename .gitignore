@@ -47,3 +47,8 @@ htmlcov/
 ._*
 Thumbs.db
 ehthumbs.db
+
+# Node / Frontend
+node_modules/
+dist/
+.pnpm-debug.log*

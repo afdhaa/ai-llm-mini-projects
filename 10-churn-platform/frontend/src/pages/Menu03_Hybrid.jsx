@@ -1,20 +1,40 @@
 import React, { useState } from "react";
 import { churnApi } from "../services/api";
 import { useSettings } from "../context/SettingsContext";
-import { Play, Clock } from "lucide-react";
+import { Play } from "lucide-react";
 import PageStoreHeader from "../components/PageStoreHeader";
+import PromptEditor from "../components/PromptEditor";
+import FormattedAIResponse from "../components/FormattedAIResponse";
 import { useCustomer } from "../context/CustomerContext";
+
+const DEFAULT_HYBRID_PROMPT = `You are a Senior Strategic Account Manager at a leading B2B e-commerce platform.
+Write a formal, actionable account retention briefing for account: "{customer}".
+
+STATISTICAL CHURN RISK PROFILE:
+- Calibrated Churn Probability: {churn_percentage}
+- Machine Learning Risk Assessment: {ml_risk_level}
+- Historical Monthly Transactions: {transactions}
+- Platform Engagement: {active_days} of past 30 days active ({inactive_days} days dormant)
+
+REQUIREMENTS:
+1. Ground your qualitative narrative strictly on the ML calibrated probability of {churn_percentage}. Do not contradict this score.
+2. Explain the operational reason for churn based on the engagement gap.
+3. Prescribe 3 concrete intervention steps tailored to this risk level.`;
 
 export default function Menu03_Hybrid() {
   const { activeCustomer } = useCustomer();
   const { getHeaders, config } = useSettings();
+  const [prompt, setPrompt] = useState(DEFAULT_HYBRID_PROMPT);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleGenerate = async () => {
     setLoading(true);
     try {
-      const res = await churnApi.briefingTier03({ customer: activeCustomer }, getHeaders());
+      const res = await churnApi.briefingTier03(
+        { customer: activeCustomer, custom_prompt: prompt },
+        getHeaders()
+      );
       setResult(res);
     } catch (e) {
       alert("Briefing generation failed: " + e.message);
@@ -50,8 +70,26 @@ export default function Menu03_Hybrid() {
         </div>
       </div>
 
+      {/* Interactive Prompt Directive Editor */}
+      <PromptEditor
+        value={prompt}
+        onChange={setPrompt}
+        onReset={() => setPrompt(DEFAULT_HYBRID_PROMPT)}
+        variables={[
+          "customer",
+          "churn_percentage",
+          "ml_risk_level",
+          "transactions",
+          "active_days",
+          "inactive_days",
+        ]}
+        title="Hybrid Synthesis Prompt Directive (Customizable)"
+        subtitle="You can customize instructions, add corporate rubrics, or alter formatting guidelines before invoking LLM synthesis."
+      />
+
+      {/* Execution Results */}
       {result && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
           {/* Statistical Truth Column */}
           <div className="rounded-lg border border-neutral-200 bg-white p-4 space-y-3 shadow-sm">
             <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-500 block border-b border-neutral-100 pb-2">
@@ -84,31 +122,19 @@ export default function Menu03_Hybrid() {
             </div>
 
             <div className="text-[11px] text-neutral-400 pt-2 border-t border-neutral-100 font-mono">
-              Ground truth numerical bounds.
+              Ground truth numerical bounds (Scikit-Learn).
             </div>
           </div>
 
-          {/* Qualitative Synthesis Column */}
-          <div className="md:col-span-2 rounded-lg border border-neutral-200 bg-white p-4 flex flex-col justify-between shadow-sm">
-            <div>
-              <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-100">
-                <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-neutral-500">
-                  2. Executive Briefing (Anchored Narrative)
-                </span>
-                <span className="text-[10px] font-mono text-neutral-500 flex items-center gap-1">
-                  <Clock className="h-3 w-3 text-neutral-400" />
-                  {result.latency_ms}ms
-                </span>
-              </div>
-              <div className="p-3 rounded border border-neutral-200 bg-neutral-50/70 text-xs text-neutral-800 whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto font-sans">
-                {result.briefing}
-              </div>
-            </div>
-
-            <div className="text-[11px] text-neutral-400 pt-3 border-t border-neutral-100 font-mono flex justify-between">
-              <span>Tokens: {result.token_usage?.total_tokens || 0}</span>
-              <span>Grounding: 100% anchored on {result.churn_percentage}</span>
-            </div>
+          {/* Qualitative Synthesis Column - Formatted AI Response */}
+          <div className="md:col-span-2">
+            <FormattedAIResponse
+              content={result.briefing}
+              latencyMs={result.latency_ms}
+              tokenUsage={result.token_usage}
+              modelName={config.model}
+              title={`2. Executive Retention Briefing: ${result.customer}`}
+            />
           </div>
         </div>
       )}

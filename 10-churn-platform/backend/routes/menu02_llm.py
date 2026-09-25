@@ -1,7 +1,7 @@
 import time
 from flask import Blueprint, jsonify, request
 from llm_factory import get_llm, extract_token_usage
-from routes.common import get_customer_profile
+from routes.common import get_customer_profile, normalize_llm_content
 
 menu02_bp = Blueprint("menu02", __name__)
 
@@ -37,12 +37,24 @@ def evaluate_pure_llm():
             act = int(data.get("active_days", 5))
             inact = int(data.get("inactive_days", 30))
 
-        prompt = PROMPT_TEMPLATE.format(
-            customer=customer,
-            transactions=tx,
-            active_days=act,
-            inactive_days=inact,
-        )
+        custom_prompt = data.get("custom_prompt")
+        if custom_prompt and custom_prompt.strip():
+            try:
+                prompt = custom_prompt.format(
+                    customer=customer,
+                    transactions=tx,
+                    active_days=act,
+                    inactive_days=inact,
+                )
+            except Exception:
+                prompt = custom_prompt
+        else:
+            prompt = PROMPT_TEMPLATE.format(
+                customer=customer,
+                transactions=tx,
+                active_days=act,
+                inactive_days=inact,
+            )
 
         llm = get_llm(request)
         resp = llm.invoke(prompt)
@@ -53,7 +65,7 @@ def evaluate_pure_llm():
             "success": True,
             "customer": customer,
             "prompt": prompt,
-            "response": str(resp.content),
+            "response": normalize_llm_content(resp.content),
             "latency_ms": latency_ms,
             "token_usage": tokens.model_dump(),
             "characteristics": "Zero ML training required; rich qualitative reasoning; subjective numerical estimation.",

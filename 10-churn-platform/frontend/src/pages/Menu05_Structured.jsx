@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { churnApi } from "../services/api";
 import { useSettings } from "../context/SettingsContext";
-import { Play, Clock, Code2 } from "lucide-react";
+import { Play, Clock, Code2, Copy, Check } from "lucide-react";
 import PageStoreHeader from "../components/PageStoreHeader";
 import { useCustomer } from "../context/CustomerContext";
 
@@ -11,6 +11,7 @@ export default function Menu05_Structured() {
   const isAll = activeCustomer === "ALL";
   const [mode, setMode] = useState(isAll ? "batch" : "single");
   const [result, setResult] = useState(null);
+  const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
@@ -139,10 +140,25 @@ export default function Menu05_Structured() {
                       <Code2 className="h-3.5 w-3.5 text-neutral-500" />
                       JSON Serialization
                     </span>
-                    <span className="text-[10px] font-mono text-neutral-500 flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {result.latency_ms}ms
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono text-neutral-500 flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {result.latency_ms}ms
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(JSON.stringify(result.assessment, null, 2));
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
+                        }}
+                        className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] font-mono text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 transition"
+                        title="Copy JSON"
+                      >
+                        {copied ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
+                        <span>{copied ? "Copied" : "Copy"}</span>
+                      </button>
+                    </div>
                   </div>
                   <pre className="p-3 rounded border border-neutral-200 bg-neutral-50 text-xs font-mono text-neutral-800 whitespace-pre leading-relaxed overflow-x-auto max-h-96">
                     {JSON.stringify(result.assessment, null, 2)}

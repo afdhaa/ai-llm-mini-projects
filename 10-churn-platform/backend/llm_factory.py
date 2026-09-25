@@ -179,7 +179,12 @@ def test_llm_connection(config: dict[str, Any]) -> dict[str, Any]:
             "success": True,
             "message": f"Successfully connected to {config.get('model')} via {config.get('provider')}.",
             "latency_ms": latency_ms,
-            "reply": str(resp.content)[:100],
+            "reply": (
+                "".join(
+                    item.get("text", str(item)) if isinstance(item, dict) else str(item)
+                    for item in resp.content
+                ) if isinstance(resp.content, list) else str(resp.content)
+            )[:100],
             "token_usage": tokens.model_dump(),
         }
     except Exception as e:
