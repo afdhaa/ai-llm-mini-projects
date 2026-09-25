@@ -26,7 +26,7 @@ export default function Menu08_RAG() {
   return (
     <div className="space-y-6 max-w-5xl">
       {/* In-Page Store Selector & Parameter Header */}
-      <PageStoreHeader showDatasetAction={false} />
+      <PageStoreHeader showDatasetAction={false} showFinancials={false} showTickets={true} badge="RAG Support Signals" />
 
       {/* Header section */}
       <div className="border-b border-neutral-200 pb-5">

@@ -55,9 +55,8 @@ export default function Menu01_PureML() {
 
   return (
     <div className="space-y-6 max-w-5xl">
-      {/* In-Page Store Selector & Parameter Header */}
-      <PageStoreHeader showDatasetAction={true} />
-
+      {/* In-Page Store Selector & Parameter Header (Tabular Only) */}
+      <PageStoreHeader showDatasetAction={true} showFinancials={false} showTickets={false} badge="Tabular Signals" />
       {/* Header section */}
       <div className="border-b border-neutral-200 pb-5">
         <div className="flex items-start justify-between">

@@ -30,7 +30,7 @@ export default function Menu05_Structured() {
   return (
     <div className="space-y-6 max-w-5xl">
       {/* In-Page Store Selector & Parameter Header */}
-      <PageStoreHeader showDatasetAction={false} />
+      <PageStoreHeader showDatasetAction={false} showFinancials={false} showTickets={false} badge="Tabular Signals" />
 
       {/* Header section */}
       <div className="border-b border-neutral-200 pb-5">

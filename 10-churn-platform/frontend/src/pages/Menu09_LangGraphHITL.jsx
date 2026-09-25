@@ -105,7 +105,7 @@ export default function Menu09_LangGraphHITL() {
   return (
     <div className="space-y-6 max-w-5xl">
       {/* In-Page Store Selector & Parameter Header */}
-      <PageStoreHeader showDatasetAction={false} />
+      <PageStoreHeader showDatasetAction={false} showFinancials={true} showTickets={true} badge="Multi-Agent Commercial & Technical Profile" />
 
       {/* Header section */}
       <div className="border-b border-neutral-200 pb-5">

@@ -33,9 +33,19 @@ export default function Menu07_Evals() {
 
   return (
     <div className="space-y-6 max-w-5xl">
-      {/* In-Page Store Selector & Parameter Header */}
-      <PageStoreHeader showDatasetAction={true} />
-
+      {/* In-Page Benchmark Suite Context Bar */}
+      <div className="rounded-lg border border-neutral-200 bg-white p-3.5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-6 text-xs font-mono">
+        <div className="flex items-center gap-2">
+          <Scale className="h-4 w-4 text-neutral-500" />
+          <span className="font-semibold text-neutral-900 uppercase">Benchmark Suite:</span>
+          <span className="text-neutral-700">eval_dataset.json ({dataset.length} Golden Cases)</span>
+          <span className="text-neutral-300">•</span>
+          <span className="text-neutral-500">Pillar 1 (Rules) + Pillar 2 (Judge)</span>
+        </div>
+        <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-neutral-100 text-neutral-600 border border-neutral-200 w-fit">
+          Quality Assurance
+        </span>
+      </div>
       {/* Header section */}
       <div className="border-b border-neutral-200 pb-5">
         <div className="flex items-start justify-between">

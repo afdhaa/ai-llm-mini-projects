@@ -41,7 +41,7 @@ export default function Menu06_Guarded() {
   return (
     <div className="space-y-6 max-w-5xl">
       {/* In-Page Store Selector & Parameter Header */}
-      <PageStoreHeader showDatasetAction={false} />
+      <PageStoreHeader showDatasetAction={false} showFinancials={false} showTickets={false} badge="Sanitization Sandbox" />
 
       {/* Header section */}
       <div className="border-b border-neutral-200 pb-5">
